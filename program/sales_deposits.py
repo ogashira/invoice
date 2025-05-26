@@ -27,11 +27,13 @@ class SalesDeposits:
                 if sale.is_date_matched(date):
                     self.__sales_deposits.append(sale)
 
-
     def is_customer_matched(self, customer_code):
         return self.__customer_code == customer_code
 
+    def calc_sales_deposits_count(self):
+        return len(self.__sales_deposits)
 
     def show_me(self):
         for instance in self.__sales_deposits:
             instance.show_me()
+

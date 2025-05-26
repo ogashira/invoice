@@ -5,14 +5,16 @@ from sale import Sale
 from sales_deposits import SalesDeposits
 from customer import Customer
 from invoice import Invoice
+from excel import Excel
 
 
 class Factory:
 
-    def __init__(self, df_sime, df_sale, df_deposit):
+    def __init__(self, df_sime, df_sale, df_deposit, df_customer):
         self.__df_sime = df_sime
         self.__df_sale = df_sale
         self.__df_deposit = df_deposit
+        self.__df_customer = df_customer
 
     def create_sales_deposits(self, customers):
         '''
@@ -75,19 +77,19 @@ class Factory:
 
         customers = []
         for customer_code in customers_list:
-            df_of_customer_sale = (
-                            self.__df_sale[self.__df_sale['RurSeiCD'] 
+            df_of_customer_customer = (
+                            self.__df_customer[self.__df_customer['TokSeikyuCD'] 
                             == customer_code])
-            if df_of_customer_sale is not None:
-                for i in range(len(df_of_customer_sale)):
-                    name1 = df_of_customer_sale.iloc[i,:]['RurTokNam1']
-                    name2 = df_of_customer_sale.iloc[i,:]['RurTokNam2']
-                    name3 = df_of_customer_sale.iloc[i,:]['RurTokNam3']
-                    pos_no1 = df_of_customer_sale.iloc[i,:]['RurTokPosNo1']
-                    pos_no2 = df_of_customer_sale.iloc[i,:]['RurTokPosNo2']
-                    addr1 = df_of_customer_sale.iloc[i,:]['RurTokAddr1']
-                    addr2 = df_of_customer_sale.iloc[i,:]['RurTokAddr2']
-                    addr3 = df_of_customer_sale.iloc[i,:]['RurTokAddr3']
+            if df_of_customer_customer is not None:
+                for i in range(len(df_of_customer_customer)):
+                    name1 = df_of_customer_customer.iloc[i,:]['AitNam1']
+                    name2 = df_of_customer_customer.iloc[i,:]['AitNam2']
+                    name3 = df_of_customer_customer.iloc[i,:]['AitNam3']
+                    pos_no1 = df_of_customer_customer.iloc[i,:]['AitPosNo1']
+                    pos_no2 = df_of_customer_customer.iloc[i,:]['AitPosNo2']
+                    addr1 = df_of_customer_customer.iloc[i,:]['AitAddr1']
+                    addr2 = df_of_customer_customer.iloc[i,:]['AitAddr2']
+                    addr3 = df_of_customer_customer.iloc[i,:]['AitAddr3']
 
                     customer = Customer(customer_code, name1, name2, name3,
                                      pos_no1, pos_no2, addr1, addr2, addr3)
@@ -98,15 +100,17 @@ class Factory:
 
         
             
-    def create_invoice(self, customers, sales_deposits ):
-        for customer_code in customers:
+    def create_invoice(self, list_customers, sales_deposits, customers ):
+
+        invoices = []
+        for customer_code in list_customers:
             df_of_customer_sime = (
                     self.__df_sime[self.__df_sime['TszTokCD'] 
                                                        == customer_code])
             if df_of_customer_sime is not None:
                 for i in range(len(df_of_customer_sime)):
                     closing_date = (df_of_customer_sime.iloc[i,:]
-                                                            ['TszSimeDay']) 
+                                                            ['TszSimeDay'])
                     last_balance = (df_of_customer_sime.iloc[i,:]
                                                             ['TszSeiZanZ'])
                     deposit = df_of_customer_sime.iloc[i,:]['TszNyuKinT']
@@ -115,5 +119,28 @@ class Factory:
                     tax = df_of_customer_sime.iloc[i,:]['TszZeiKinT']
                     billed_price = (df_of_customer_sime.iloc[i,:]
                                                             ['TszSeiZanK'])
+                    ins_customer = None
+                    for customer in customers:
+                        if customer.is_customer_matched(customer_code):
+                            ins_customer = customer
+
+                    ins_sales_deposits = None
+                    for one_of_sales_deposits in sales_deposits:
+                        if (one_of_sales_deposits.
+                                      is_customer_matched(customer_code)):
+                            ins_sales_deposits = one_of_sales_deposits
+
+                    excel = Excel(customer_code)
+
+                    invoice = Invoice(customer_code, closing_date,
+                                      last_balance, deposit, sales_price,
+                                      tax, billed_price, ins_customer, 
+                                      ins_sales_deposits, excel)
+                    invoices.append(invoice)                    
+        return invoices
+                    
+                    
+
+
 
 

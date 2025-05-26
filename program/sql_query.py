@@ -39,13 +39,8 @@ class SqlRURIDT(object):
                     " RURIDT.RurToriKBN, RURIDT.RurHinNam, RURIDT.RurUriTniCD,"
                     " RURIDT.RurKoSu, RURIDT.RurUriTnk, RURIDT.RurUriKin,"
                     " RURIDT.RurzeiTni, RURIDT.RurZeiKin, RURIDT.RurSeiYMDY,"
-                    " RURIDT.RurSeiUpFlg, RURIHD.RurTokNam1, RURIHD.RurTokNam2,"
-                    " RURIHD.RurTokNam3, RURIHD.RurTokPosNo1,"
-                    " RURIHD.RurTokPosNo2, RURIHD.RurTokAddr1,"
-                    " RURIHD.RurTokAddr2, RURIHD.RurTokAddr3, RJYUCD.RjcCMNo"
+                    " RURIDT.RurSeiUpFlg, RJYUCD.RjcCMNo"
                     " From dbo.RURIDT"
-                    " LEFT JOIN dbo.RURIHD"
-                    " ON RURIDT.RurUNo = RURIHD.RurUNo"
                     " LEFT JOIN dbo.RJYUCD"
                     " ON RURIDT.RurJCNo = RJYUCD.RjcJCNo"
                     " AND RURIDT.RurJGNo = RJYUCD.RjcJGNo"
@@ -86,3 +81,28 @@ class SqlRNYUKN(object):
         deposit_data = pd.read_sql(sql_query, cnxn)
 
         return deposit_data
+
+
+class SqlMTOKUI(object):
+
+      
+    def fetch_sqldata(self):
+        sql_server = SqlServer()
+        cnxn = sql_server.get_cnxn()
+
+        sql_query = ("SELECT MTOKUI.TokTokCD, MTOKUI.TokNonyuCD,"
+                    " MTOKUI.TokSeikyuCD,"
+                    " MAITEM.AitNam1, MAITEM.AitNam2, MAITEM.AitNam3,"
+                    " MAITEM.AitPosNo1, MAITEM.AitPosNo2,"
+                    " MAITEM.AitAddr1, MAITEM.AitAddr2, MAITEM.AitAddr3"
+                    " From dbo.MTOKUI"
+                    " JOIN dbo.MAITEM"
+                    " ON MTOKUI.TokTokCD = MAITEM.AitCD1"
+                    " AND MTOKUI.TokNonyuCD = MAITEM.AitCD2"
+                    " WHERE MTOKUI.TokNonyuCD = ' '"
+                    " AND MTOKUI.TokTokCD = MTOKUI.TokSeikyuCD"
+                    " ORDER BY MTOKUI.TokTokCD"
+                    )
+        tokui_data = pd.read_sql(sql_query, cnxn)
+
+        return tokui_data
