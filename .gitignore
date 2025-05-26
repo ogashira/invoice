@@ -3,3 +3,4 @@ __pycache__
 *.un~
 *.ini
 *.ini~
+*.xlsx
