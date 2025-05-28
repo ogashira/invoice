@@ -10,7 +10,7 @@ from excel import *
 
 class ProgramFlow:
 
-    def __init__(self, sime_day):
+    def __init__(self, sime_day, TAX_RATE):
         self.__df_sime = pd.DataFrame()
         self.__df_sale = pd.DataFrame()
         self.__df_deposit = pd.DataFrame()
@@ -24,6 +24,7 @@ class ProgramFlow:
         self.__df_deposit = sql.fetch_sqldata()
         sql = SqlMTOKUI()
         self.__df_customer = sql.fetch_sqldata()
+        self.__TAX_RATE = TAX_RATE
 
 
         if not len(self.__df_sime):
@@ -44,7 +45,7 @@ class ProgramFlow:
 
         invoices = []
         invoices = factory.create_invoice(self.__customers, 
-                                             sales_deposits, customers)
+                            sales_deposits, customers, self.__TAX_RATE)
         
         
 

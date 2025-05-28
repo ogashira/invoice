@@ -17,7 +17,7 @@ class SqlBTSZAN(object):
                     " TszNyuKinT,"
                     " TszSeiZanK, TszUriKin1, TszNyuKin1, TszNyuKin7 "
                     " FROM dbo.BTSZAN"
-                    " WHERE TszSimeDay =" + self.sime_day +
+                    " WHERE TszSimeDay =" + self.sime_day + "AND TszTokCD = 'T0060'"
                     " ORDER BY TszTokCD"
                     )
         sime_data = pd.read_sql(sql_query, cnxn)

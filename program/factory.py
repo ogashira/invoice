@@ -100,7 +100,8 @@ class Factory:
 
         
             
-    def create_invoice(self, list_customers, sales_deposits, customers ):
+    def create_invoice(self, list_customers, sales_deposits, customers,
+                                                              TAX_RATE ):
 
         invoices = []
         for customer_code in list_customers:
@@ -130,12 +131,12 @@ class Factory:
                                       is_customer_matched(customer_code)):
                             ins_sales_deposits = one_of_sales_deposits
 
-                    excel = Excel(customer_code)
+                    excel = Excel(customer_code, closing_date)
 
                     invoice = Invoice(customer_code, closing_date,
                                       last_balance, deposit, sales_price,
                                       tax, billed_price, ins_customer, 
-                                      ins_sales_deposits, excel)
+                                      ins_sales_deposits, excel, TAX_RATE)
                     invoices.append(invoice)                    
         return invoices
                     
