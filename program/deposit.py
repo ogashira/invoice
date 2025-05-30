@@ -13,3 +13,12 @@ class Deposit:
     def is_date_matched(self, date):
         return date == self.__deposit_date
 
+    def filling_page_sales_deposits(self, excel, row_no, page_count, 
+                                    sales_deposits_count):
+
+        excel.filling_page_deposits(row_no, page_count, 
+                                    sales_deposits_count,
+                                    self.__deposit_no,
+                                    self.__deposit_date,
+                                    self.__deposit_kubun,
+                                    self.__deposit_price)

@@ -33,6 +33,37 @@ class SalesDeposits:
     def calc_sales_deposits_count(self):
         return len(self.__sales_deposits)
 
+    def filling_page_sales_deposits(self, excel, page_count, 
+                                    sales_deposits_count):
+        dic_row = {20:84, 47:154, 74:224, 101:294, 128:364, 
+                   155:434, 182:504, 209:574, 236:644}
+        '''
+        ２ページ目以降のインスタンス個数とエクセルの行数との関係
+        19(インスタンス20個目を処理したら行数を84にする)
+        '''
+        instances_count = 0
+        row_no = 28 #エクセルの行
+        while True:
+            if instances_count >= len(self.__sales_deposits):
+                break
+            
+            instance = self.__sales_deposits[instances_count] #インスタンス
+            if instances_count < 20:
+                instance.filling_page_sales_deposits(
+                                       excel, row_no, page_count,
+                                       sales_deposits_count)
+                row_no += 2
+                instances_count += 1
+                continue
+
+            if instances_count in dic_row:
+                row_no = dic_row[instances_count]
+            instance.filling_page_sales_deposits(
+                                       excel, row_no, page_count,
+                                       sales_deposits_count)
+            row_no += 2
+            instances_count += 1
+
     def show_me(self):
         for instance in self.__sales_deposits:
             instance.show_me()

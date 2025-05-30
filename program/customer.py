@@ -16,7 +16,7 @@ class Customer:
     def is_customer_matched(self, customer_code):
         return self.__customer_code == customer_code
 
-    def filling_page_customer(self, excel):
+    def filling_page_customer(self, excel, page_count):
         excel.filling_page_customer(self.__customer_nam1,
                                     self.__customer_nam2,
                                     self.__customer_nam3,
@@ -24,7 +24,8 @@ class Customer:
                                     self.__customer_pos2,
                                     self.__customer_addr1,
                                     self.__customer_addr2,
-                                    self.__customer_addr3)
+                                    self.__customer_addr3,
+                                    page_count)
         
 
     def show_me(self):

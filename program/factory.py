@@ -133,7 +133,7 @@ class Factory:
 
                     excel = Excel(customer_code, closing_date)
 
-                    invoice = Invoice(customer_code, closing_date,
+                    invoice = Invoice(customer_code, 
                                       last_balance, deposit, sales_price,
                                       tax, billed_price, ins_customer, 
                                       ins_sales_deposits, excel, TAX_RATE)

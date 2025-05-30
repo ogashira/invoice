@@ -12,6 +12,20 @@ class Sale:
         self.__sale_price = sale_price
         self.__tekiyo = tekiyo
 
+    def filling_page_sales_deposits(self, excel, row_no, page_count,
+                                                    sales_deposits_count):
+        excel.filling_page_sales(row_no, page_count, 
+                                 sales_deposits_count,
+                                 self.__sale_no,
+                                 self.__sale_date,
+                                 self.__sale_hinban,
+                                 self.__sale_hinmei,
+                                 self.__sale_qty,
+                                 self.__sale_tani,
+                                 self.__sale_unit_price,
+                                 self.__sale_price,
+                                 self.__tekiyo)
+
     def show_me(self):
         print(self.__sale_date, self.__sale_no)
 

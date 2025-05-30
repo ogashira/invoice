@@ -1,5 +1,6 @@
 import pandas as pd
 import datetime
+import warnings
 from dateutil.relativedelta import relativedelta
 from sql_server import SqlServer
 
@@ -10,6 +11,7 @@ class SqlBTSZAN(object):
         self.sime_day = sime_day
       
     def fetch_sqldata(self):
+        warnings.filterwarnings("ignore", category=UserWarning)
         sql_server = SqlServer()
         cnxn = sql_server.get_cnxn()
 
@@ -31,6 +33,7 @@ class SqlRURIDT(object):
         self.bill_day = bill_day
       
     def fetch_sqldata(self):
+        warnings.filterwarnings("ignore", category=UserWarning)
         sql_server = SqlServer()
         cnxn = sql_server.get_cnxn()
 
@@ -62,6 +65,7 @@ class SqlRNYUKN(object):
         self.sime_day = sime_day
 
     def fetch_sqldata(self):
+        warnings.filterwarnings("ignore", category=UserWarning)
         date_sime_day = datetime.datetime.strptime(self.sime_day, '%Y%m%d')
         date_stt_day = (date_sime_day - relativedelta(months=1) 
                                       + relativedelta(days=1))
@@ -87,6 +91,7 @@ class SqlMTOKUI(object):
 
       
     def fetch_sqldata(self):
+        warnings.filterwarnings("ignore", category=UserWarning)
         sql_server = SqlServer()
         cnxn = sql_server.get_cnxn()
 
