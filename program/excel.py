@@ -16,7 +16,7 @@ class Excel:
             path = r'/mnt/public/技術課ﾌｫﾙﾀﾞ/200. effit_data/ﾏｽﾀ/請求書関連/invoice_format.xlsx'
 
         file_path = (path)
-        self.wb = openpyxl.load_workbook(file_path)
+        self.wb = openpyxl.load_workbook(file_path, data_only=True)
         self.ws = self.wb['1']
 
         self.__customer_code = customer_code
@@ -50,6 +50,7 @@ class Excel:
         self.ws.delete_rows(page_count * 70 + 1, 700)
 
         for i in range(page_count):
+            self.ws.cell(i*70+1, 40).value = page_count
             self.ws.cell(i*70+6, 2).value = self.__customer_code
             self.ws.cell(i*70+2, 26).value = (self.__closing_date[:4]  + '年' + 
                                          self.__closing_date[4:6] + '月' + 
@@ -69,7 +70,7 @@ class Excel:
             if customer_nam3 != ' ':
                 self.ws.cell(i*70+9,19).value = '御中'
 
-    def filling_page_sales(self,row_no, page_count, 
+    def filling_page_sales(self,row_no, count_page_sum_row, 
                            sales_deposits_count,
                            sale_no,
                            sale_date,
@@ -79,7 +80,14 @@ class Excel:
                            sale_tani,
                            sale_unit_price,
                            sale_price,
-                           tekiyo):
+                           tekiyo,
+                           page_count):
+
+        last_page_sum_row = 0
+        if page_count == 1:
+            last_page_sum_row = 69
+        last_page_sum_row = 139 + (page_count -2) * 70
+
 
         koumoku = '売上'
         if sale_hinban == '999999':
@@ -94,6 +102,19 @@ class Excel:
         self.ws.cell(row_no, 26).value = sale_unit_price
         self.ws.cell(row_no, 30).value = sale_price
         self.ws.cell(row_no, 34).value = tekiyo
+        self.ws.cell(count_page_sum_row, 26).value = ( 
+                                 self.ws.cell(count_page_sum_row, 26).value + 1)
+        self.ws.cell(count_page_sum_row, 29).value = (
+                        self.ws.cell(count_page_sum_row, 29).value + sale_price)
+        self.ws.cell(last_page_sum_row, 26).value = (
+                                  self.ws.cell(last_page_sum_row, 26).value + 1)
+        self.ws.cell(last_page_sum_row+1, 26).value = (
+                                self.ws.cell(last_page_sum_row+1, 26).value + 1)
+        self.ws.cell(last_page_sum_row, 29).value = (
+                self.ws.cell(last_page_sum_row, 29).value + sale_price) 
+        self.ws.cell(last_page_sum_row+1, 29).value = (
+                self.ws.cell(last_page_sum_row+1, 29).value + sale_price) 
+
 
 
     def filling_page_deposits(self,row_no, page_count, 
@@ -108,6 +129,32 @@ class Excel:
         self.ws.cell(row_no, 7).value = '＜ 御 入 金 ＞'
         self.ws.cell(row_no, 30).value = deposit_price
 
+    def arrange_sheets(self, page_count):
+        for i in range(68, (page_count-1) * 70 + 69, 70):
+            self.ws.cell(i, 26).value = str(self.ws.cell(i, 26).value) + '件'
+            self.ws.cell(i + 1, 26).value = str(self.ws.cell(i+1, 26).value) + '件'
+            self.ws.cell(i + 2, 26).value = str(self.ws.cell(i+2, 26).value) + '件'
+
+        for i in range((page_count-1) * 70, 68, -70):
+            self.ws.cell(i, 21).value = None
+            self.ws.cell(i, 26).value = None
+            self.ws.cell(i, 29).value = None
+            self.ws.cell(i-1, 21).value = None
+            self.ws.cell(i-1, 26).value = None
+            self.ws.cell(i-1, 29).value = None
+
+            sheet_range = self.ws.iter_rows(min_row=i-1, max_row=i, 
+                                                           min_col=1, max_col=40)
+
+            border_no = Border(top=None, bottom=None, left=None, right=None)
+            for row in sheet_range:
+                for cell in row:
+                    cell.border = border_no
+            
+        # print設定
+        max_row = page_count * 70
+        print_area = 'A1:AN' + str(max_row)
+        self.ws.print_area = print_area 
 
 
     def save_file(self):

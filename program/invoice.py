@@ -47,10 +47,12 @@ class Invoice:
                                                 self.__sales_deposits_count
                                                 )
         
+        self.__excel.arrange_sheets(self.__invoices_page_count)
         self.__excel.save_file()
 
 
     def show_me(self):
-        print(self.__customer_code, self.__billed_price, self.__sales_deposits_count)
+        print(self.__customer_code, self.__billed_price, 
+              self.__sales_deposits_count)
         #print(self.__customer.show_me())
         self.__sales_deposits.show_me()

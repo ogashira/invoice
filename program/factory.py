@@ -1,4 +1,5 @@
 import pandas as pd
+import yaml
 
 from deposit import Deposit
 from sale import Sale
@@ -15,6 +16,13 @@ class Factory:
         self.__df_sale = df_sale
         self.__df_deposit = df_deposit
         self.__df_customer = df_customer
+
+        with open('../yaml/invoice.yaml', 'r') as yaml_file:
+            yaml_data = yaml.safe_load(yaml_file)
+        self.__instance_index_row = yaml_data['instanceIndex_saleExcelRow']
+        self.__nyukin_kubun = yaml_data['nyukin_kubun']
+
+        
 
     def create_sales_deposits(self, customers):
         '''
@@ -62,12 +70,13 @@ class Factory:
                     deposit_price = (df_of_customer_deposit.iloc[i,:]
                                                           ['RnyNyuKin'])
                     deposit = Deposit(deposit_no, deposit_date, 
-                                           deposit_kubun, deposit_price)
+                            deposit_kubun, deposit_price, self.__nyukin_kubun)
                     deposits.append(deposit)
                     sales_deposits_date_set.add(deposit_date)
 
             sales_deposits_instance = SalesDeposits(sales, deposits, 
-                                 sales_deposits_date_set, customer_code)
+                                 sales_deposits_date_set, customer_code, 
+                                                    self.__instance_index_row)
             sales_deposits.append(sales_deposits_instance)
 
         return sales_deposits
