@@ -1,27 +1,23 @@
-import math
-from sale import Sale
-from deposit import Deposit
-
-
 class SalesDeposits:
 
     def __init__(self, sales, deposits, sales_deposits_date_set, 
-                                           customer_code, instance_index_row):
-        self.__customer_code = customer_code
-        self.__sales = sales
-        self.__instance_index_row = instance_index_row
-        self.__deposits = deposits
+                                    customer_code, instance_index_row)->None:
+        self.__customer_code:str = customer_code
+        self.__sales:list = sales
+        self.__instance_index_row:dict = instance_index_row
+        self.__deposits:list = deposits
         # 売上日と入金日の集合をリストにして並び替える
-        self.__sales_deposits_date_list = sorted(list(sales_deposits_date_set))
+        self.__sales_deposits_date_list:list = sorted(
+                                             list(sales_deposits_date_set))
 
-        self.__sales_deposits = []
+        self.__sales_deposits:list = []
         # 売上日、入金日が小さい順にsalesとdepositのインスタンスを詰める
         # 売上日と入金日が重なった時は入金日を先にする。
 
         self.__create_sales_deposits() 
 
 
-    def __create_sales_deposits(self):
+    def __create_sales_deposits(self)->None:
         for date in self.__sales_deposits_date_list:
             for deposit in self.__deposits:  # 入金日を優先
                 if deposit.is_date_matched(date):
@@ -30,14 +26,14 @@ class SalesDeposits:
                 if sale.is_date_matched(date):
                     self.__sales_deposits.append(sale)
 
-    def is_customer_matched(self, customer_code):
+    def is_customer_matched(self, customer_code)->bool:
         return self.__customer_code == customer_code
 
-    def calc_sales_deposits_count(self):
+    def calc_sales_deposits_count(self)->int:
         return len(self.__sales_deposits)
 
     def filling_page_sales_deposits(self, excel, page_count, 
-                                    sales_deposits_count):
+                                    sales_deposits_count)->None:
 
         '''
         self.__instance_index_row = {0:28, 20:84, 47:154, 74:224, 101:294, 128:364, 
@@ -46,10 +42,10 @@ class SalesDeposits:
         インスタンス20個目を処理したら行数を84にする
         '''
 
-        instances_count = 0
-        row_no = 0 #エクセルの行
-        count_page_sum_row = 0
-        first_row_no = 0
+        instances_count:int = 0
+        row_no:int = 0 #エクセルの行
+        count_page_sum_row:int = 0
+        first_row_no:int = 0
         while True:
             if instances_count >= len(self.__sales_deposits):
                 break
@@ -71,8 +67,3 @@ class SalesDeposits:
                                    sales_deposits_count, page_count)
             row_no += 2
             instances_count += 1
-
-    def show_me(self):
-        for instance in self.__sales_deposits:
-            instance.show_me()
-

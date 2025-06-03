@@ -3,6 +3,6 @@ from sql_query import *
 from program_flow import *
 
 TAX_RATE = '10'
-sime_day = '20250320'
-program_flow = ProgramFlow(sime_day, TAX_RATE)
+SIME_DAY = '20250320'
+program_flow:object = ProgramFlow(SIME_DAY, TAX_RATE)
 program_flow.start()
