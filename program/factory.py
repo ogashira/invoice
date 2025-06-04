@@ -24,7 +24,7 @@ class Factory:
 
         
 
-    def create_sales_deposits(self, customers)-> object:
+    def create_sales_deposits(self, customers)-> list:
         '''
         SalesDepositsクラスのインスタンスを作る
         SaleクラスのインスタンスとDepositクラスのインスタンスを
@@ -82,7 +82,7 @@ class Factory:
         return sales_deposits
         
 
-    def create_customer(self, customers_list)->object:
+    def create_customer(self, customers_list)->list:
 
         customers:object = []
         for customer_code in customers_list:
@@ -110,7 +110,7 @@ class Factory:
         
             
     def create_invoice(self, list_customers, sales_deposits, customers,
-                                                              TAX_RATE )-> object:
+                                                              TAX_RATE )-> list:
 
         invoices:object = []
         for customer_code in list_customers:

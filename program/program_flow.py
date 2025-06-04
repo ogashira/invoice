@@ -31,7 +31,7 @@ class ProgramFlow:
             print(f'締め日({SIME_DAY})のデータがありません')
             sys.exit()
 
-        self.__customers = list(self.__df_sime.loc[:, 'TszTokCD'])
+        self.__customers:list = list(self.__df_sime.loc[:, 'TszTokCD'])
         # ['T0020', 'T0060', 'T0100',......] 締め日に該当する全顧客リスト
 
 
@@ -40,14 +40,14 @@ class ProgramFlow:
         factory:Factory = Factory(self.__df_sime, self.__df_sale, 
                                 self.__df_deposit, self.__df_customer)
 
-        sales_deposits:object = []
+        sales_deposits:list = []
         sales_deposits = factory.create_sales_deposits(self.__customers)
         # SalesDepositsの配列
 
-        customers:object = []
+        customers:list = []
         customers = factory.create_customer(self.__customers)
 
-        invoices:object = []
+        invoices:list = []
         invoices = factory.create_invoice(self.__customers, 
                             sales_deposits, customers, self.__TAX_RATE)
         
