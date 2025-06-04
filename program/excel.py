@@ -1,5 +1,6 @@
-import openpyxl
 import platform
+import os
+import openpyxl
 from openpyxl.styles.borders import Border, Side
 from openpyxl.styles.fonts import Font
 from openpyxl.utils import get_column_letter
@@ -9,8 +10,8 @@ from openpyxl.worksheet.worksheet import Worksheet
 class Excel:
 
     def __init__(self, customer_code, closing_date)->None:
-        pf:str = platform.system()
-        if pf == 'Windows':
+        self.__pf:str = platform.system()
+        if self.__pf == 'Windows':
             path = r'//192.168.1.247/共有/技術課ﾌｫﾙﾀﾞ/200. effit_data/ﾏｽﾀ/請求書関連/invoice_format.xlsx'
         else:
             path = r'/mnt/public/技術課ﾌｫﾙﾀﾞ/200. effit_data/ﾏｽﾀ/請求書関連/invoice_format.xlsx'
@@ -164,9 +165,8 @@ class Excel:
 
 
     def save_file(self)->None:
-        self.wb.save(filename= f'{self.__closing_date}_{self.__customer_code}.xlsx')
-
-
-
-
-
+        new_folder = f'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/Excel/{self.__closing_date}'
+        if self.__pf == 'Linux':
+            new_folder:str = f'/mnt/public/営業課ﾌｫﾙﾀﾞ/02請求書/Excel/{self.__closing_date}'
+        os.makedirs(name=new_folder, exist_ok=True)
+        self.wb.save(filename= f'{new_folder}/{self.__closing_date}_{self.__customer_code}.xlsx')

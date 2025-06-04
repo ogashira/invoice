@@ -27,7 +27,7 @@ class ProgramFlow:
         self.__TAX_RATE = TAX_RATE
 
 
-        if self.__df_sime is empty:
+        if not len(self.__df_sime):
             print(f'締め日({SIME_DAY})のデータがありません')
             sys.exit()
 
@@ -36,6 +36,7 @@ class ProgramFlow:
 
 
     def start(self)->None:
+        print('請求書を作成しています。しばらくお待ちください....')
         factory:Factory = Factory(self.__df_sime, self.__df_sale, 
                                 self.__df_deposit, self.__df_customer)
 
@@ -53,6 +54,8 @@ class ProgramFlow:
 
         for invoice in invoices:
             invoice.filling_page_invoice()
+
+        print('請求書をExcelファイルで作成しました')
 
 
 

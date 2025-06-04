@@ -1,12 +1,11 @@
-import datetime
-from typing_extensions import LiteralString
 import warnings
+import datetime
 import pandas as pd
 from dateutil.relativedelta import relativedelta
 from sql_server import SqlServer
 
 
-class SqlBTSZAN(object):
+class SqlBTSZAN:
 
     def __init__(self, SIME_DAY)->None:
         self.SIME_DAY = SIME_DAY
@@ -21,7 +20,7 @@ class SqlBTSZAN(object):
                          " TszSeiZanK, TszUriKin1, TszNyuKin1, TszNyuKin7"
                          " FROM dbo.BTSZAN"
                          " WHERE TszSimeDay =" + self.SIME_DAY + 
-                         " AND TszTokCD = 'T0060'"
+                         " AND TszTokCD < 'T6000'"
                          " ORDER BY TszTokCD"
                         )
         sime_data:pd.DataFrame = pd.read_sql(sql_query, cnxn)
@@ -29,7 +28,7 @@ class SqlBTSZAN(object):
         return sime_data
 
 
-class SqlRURIDT(object):
+class SqlRURIDT:
 
     def __init__(self, bill_day)->None:
         self.bill_day = bill_day
@@ -58,7 +57,7 @@ class SqlRURIDT(object):
         return sales_data
 
 
-class SqlRNYUKN(object):
+class SqlRNYUKN:
     '''
     入金のデータは締め日１ヵ月前～締め日までの範囲を取得する
     '''
@@ -89,7 +88,7 @@ class SqlRNYUKN(object):
         return deposit_data
 
 
-class SqlMTOKUI(object):
+class SqlMTOKUI:
 
       
     def fetch_sqldata(self)->pd.DataFrame:
