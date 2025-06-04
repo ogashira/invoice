@@ -6,3 +6,6 @@ __pycache__
 *.xlsx
 ./yaml/
 *.yaml
+*.bat
+*.png
+*.md

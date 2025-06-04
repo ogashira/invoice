@@ -17,7 +17,7 @@ class Factory:
         self.__df_deposit:pd.DataFrame = df_deposit
         self.__df_customer:pd.DataFrame = df_customer
 
-        with open('../yaml/invoice.yaml', 'r') as yaml_file:
+        with open('../yaml/invoice.yaml', 'r', encoding='utf-8') as yaml_file:
             yaml_data = yaml.safe_load(yaml_file)
         self.__instance_index_row = yaml_data['instanceIndex_saleExcelRow']
         self.__nyukin_kubun = yaml_data['nyukin_kubun']
