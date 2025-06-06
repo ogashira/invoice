@@ -165,8 +165,8 @@ class Excel:
 
 
     def save_file(self)->None:
-        new_folder = f'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/Excel/{self.__closing_date}'
+        new_folder = f'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/02Excel/{self.__closing_date}'
         if self.__pf == 'Linux':
-            new_folder:str = f'/mnt/public/営業課ﾌｫﾙﾀﾞ/02請求書/Excel/{self.__closing_date}'
+            new_folder:str = f'/mnt/public/営業課ﾌｫﾙﾀﾞ/02請求書/02Excel/{self.__closing_date}'
         os.makedirs(name=new_folder, exist_ok=True)
         self.wb.save(filename= f'{new_folder}/{self.__closing_date}_{self.__customer_code}.xlsx')
