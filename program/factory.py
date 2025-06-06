@@ -1,3 +1,4 @@
+import platform
 import pandas as pd
 import yaml
 
@@ -10,28 +11,45 @@ from excel import Excel
 
 
 class Factory:
+    """
+    インスタンスを生成する
+    Attributes:
+        __df_sime (pd.DataFrame) : 締め日のデータフレーム
+        __df_sale (pd.DataFrame) : 売上のデータフレーム
+        __df_deposit (pd.DataFrame) : 入金のデータフレーム
+        __df_customer (pd.DataFrame) : 得意先マスタのデータフレーム
+    """
 
-    def __init__(self, df_sime, df_sale, df_deposit, df_customer)->None:
-        self.__df_sime:pd.DataFrame = df_sime
-        self.__df_sale:pd.DataFrame = df_sale
-        self.__df_deposit:pd.DataFrame = df_deposit
-        self.__df_customer:pd.DataFrame = df_customer
+    def __init__(self, df_sime: pd.DataFrame, df_sale: pd.DataFrame, 
+                 df_deposit: pd.DataFrame, df_customer: pd.DataFrame)->None:
+        self.__df_sime = df_sime
+        self.__df_sale = df_sale
+        self.__df_deposit = df_deposit
+        self.__df_customer = df_customer
 
-        with open('../yaml/invoice.yaml', 'r', encoding='utf-8') as yaml_file:
+        path:str = r'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/01Master/invoice.yaml'
+        if platform.system() == 'Linux':
+            path = r'/mnt/public/営業課ﾌｫﾙﾀﾞ/02請求書/01Master/invoice.yaml'
+        with open(path, 'r', encoding='utf-8') as yaml_file:
             yaml_data = yaml.safe_load(yaml_file)
         self.__instance_index_row = yaml_data['instanceIndex_saleExcelRow']
         self.__nyukin_kubun = yaml_data['nyukin_kubun']
 
         
 
-    def create_sales_deposits(self, customers)-> list:
+    def create_sales_deposits(self, customers:list)-> list:
         '''
         SalesDepositsクラスのインスタンスを作る
         SaleクラスのインスタンスとDepositクラスのインスタンスを
         作って、SalesDepositsクラスに渡す。同時に売上日、入金日の集合
         も作って、SalesDepositsクラスに渡す
+
+        Args:
+            customers (list) : 顧客コードのリスト
+        Returns:
+            sales_deposits(list) : SalesDepositクラスのインスタンスのリスト
         '''
-        sales_deposits = []
+        sales_deposits:list = []
         for customer_code in customers:  # customer_code => 'TokSeikyuCD'
             df_of_customer_sale = (
                             self.__df_sale[self.__df_sale['RurSeiCD'] 

@@ -10,7 +10,7 @@ from factory import Factory
 
 class ProgramFlow:
 
-    def __init__(self, SIME_DAY, TAX_RATE)->None:
+    def __init__(self, SIME_DAY:str, TAX_RATE:str)->None:
         self.__df_sime:pd.DataFrame = pd.DataFrame()
         self.__df_sale:pd.DataFrame = pd.DataFrame()
         self.__df_deposit:pd.DataFrame = pd.DataFrame()

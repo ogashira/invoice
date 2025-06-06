@@ -12,9 +12,9 @@ class Excel:
     def __init__(self, customer_code, closing_date)->None:
         self.__pf:str = platform.system()
         if self.__pf == 'Windows':
-            path = r'//192.168.1.247/共有/技術課ﾌｫﾙﾀﾞ/200. effit_data/ﾏｽﾀ/請求書関連/invoice_format.xlsx'
+            path = r'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/01Master/invoice_format.xlsx'
         else:
-            path = r'/mnt/public/技術課ﾌｫﾙﾀﾞ/200. effit_data/ﾏｽﾀ/請求書関連/invoice_format.xlsx'
+            path = r'/mnt/public/営業課ﾌｫﾙﾀﾞ/02請求書/01Master/invoice_format.xlsx'
 
         file_path = (path)
         self.wb:openpyxl.Workbook = openpyxl.load_workbook(filename=file_path,
