@@ -4,6 +4,7 @@ import openpyxl
 from openpyxl.styles.borders import Border, Side
 from openpyxl.styles.fonts import Font
 from openpyxl.utils import get_column_letter
+from openpyxl.drawing.image import Image
 from openpyxl.worksheet.worksheet import Worksheet
 
 
@@ -157,6 +158,21 @@ class Excel:
             for row in sheet_range:
                 for cell in row:
                     cell.border = border_no
+
+        # 印貼り付け
+        kakuin_path:str = r'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/01Master/kakuin.png'
+        matudoin_path:str = r'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/01Master/matudoin.png'
+        if self.__pf == 'Linux':
+            kakuin_path = r'/mnt/public/営業課ﾌｫﾙﾀﾞ/02請求書/01Master/kakuin.png'
+            matudoin_path = r'/mnt/public/営業課ﾌｫﾙﾀﾞ/02請求書/01Master/matudoin.png'
+        kakuin_img:Image = Image(kakuin_path)
+        matudoin_img:Image = Image(matudoin_path)
+        kakuin_img.width = 75
+        kakuin_img.height = 70
+        matudoin_img.width = 32
+        matudoin_img.height = 35
+        self.ws.add_image(kakuin_img, 'AE3')
+        self.ws.add_image(matudoin_img, 'AF16')
             
         # print設定
         max_row:int = page_count * 70
