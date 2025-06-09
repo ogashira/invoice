@@ -51,11 +51,13 @@ class ProgramFlow:
         invoices = factory.create_invoice(self.__customers, 
                             sales_deposits, customers, self.__TAX_RATE)
         
-
+        #請求書をexcelファイルで作成する
         for invoice in invoices:
             invoice.filling_page_invoice()
 
-        print('請求書をExcelファイルで作成しました')
+        print('請求書をExcelとPdfで作成しました')
+
+        # 請求書をpdfに変換する
 
 
 

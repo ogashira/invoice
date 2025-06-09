@@ -1,6 +1,7 @@
 import platform
 import os
 import openpyxl
+import win32com.client
 from openpyxl.styles.borders import Border, Side
 from openpyxl.styles.fonts import Font
 from openpyxl.utils import get_column_letter
@@ -181,8 +182,28 @@ class Excel:
 
 
     def save_file(self)->None:
-        new_folder = f'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/02Excel/{self.__closing_date}'
+        new_folder = f'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/ \
+                                                 02Excel/{self.__closing_date}'
         if self.__pf == 'Linux':
-            new_folder:str = f'/mnt/public/営業課ﾌｫﾙﾀﾞ/02請求書/02Excel/{self.__closing_date}'
+            new_folder:str = f'/mnt/public/営業課ﾌｫﾙﾀﾞ/02請求書/ \
+                                                  02Excel/{self.__closing_date}'
         os.makedirs(name=new_folder, exist_ok=True)
-        self.wb.save(filename= f'{new_folder}/{self.__closing_date}_{self.__customer_code}.xlsx')
+        self.wb.save(filename= f'{new_folder}/{self.__closing_date}_ \
+                                                 {self.__customer_code}.xlsx')
+
+        excel = win32com.client.Dispatch("Excel.Application")
+        file = excel.Workbooks.Open(f'{new_folder}/{self.__closing_date}_ \
+                                                 {self.__customer_code}.xlsx')
+        try:
+            file.Worksheets("1").Select()
+            pdf_folder = f'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/ \
+                                          03Pdf/01未提出/{self.__closing_date}'
+            os.makedirs(name= pdf_folder, exist_ok= True)
+            file.ActiveSheet.ExportAsFixedFormat(0, f'{pdf_folder}/ \
+                            {self.__closing_date}_{self.__customer_code}.pdf')
+        except Exception as e:
+            print(e)
+        finally:
+            file.Close()
+
+
