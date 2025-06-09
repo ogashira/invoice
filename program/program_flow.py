@@ -52,10 +52,13 @@ class ProgramFlow:
                             sales_deposits, customers, self.__TAX_RATE)
         
         #請求書をexcelファイルで作成する
+        cnt:int = 0
         for invoice in invoices:
             invoice.filling_page_invoice()
+            cnt += 1
+            print(f'{cnt}/{len(invoices)}個の請求書を作成しました。')
 
-        print('請求書をExcelとPdfで作成しました')
+        print('請求書全てをExcelとPdfで作成しました')
 
         # 請求書をpdfに変換する
 

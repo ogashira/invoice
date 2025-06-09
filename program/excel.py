@@ -168,39 +168,43 @@ class Excel:
             matudoin_path = r'/mnt/public/営業課ﾌｫﾙﾀﾞ/02請求書/01Master/matudoin.png'
         kakuin_img:Image = Image(kakuin_path)
         matudoin_img:Image = Image(matudoin_path)
-        kakuin_img.width = 75
-        kakuin_img.height = 70
-        matudoin_img.width = 32
-        matudoin_img.height = 35
+        kakuin_img.width = 70
+        kakuin_img.height = 67
+        matudoin_img.width = 28
+        matudoin_img.height = 30
         self.ws.add_image(kakuin_img, 'AE3')
         self.ws.add_image(matudoin_img, 'AF16')
-            
+          
         # print設定
+        CM:float = 1 / 2.54
         max_row:int = page_count * 70
         print_area:str = 'A1:AN' + str(max_row)
         self.ws.print_area = print_area 
 
+        self.ws.page_margins.top = 0.7 * CM
+        self.ws.page_margins.right = 1.0 * CM
+        self.ws.page_margins.bottom = 0.2 * CM
+        self.ws.page_margins.left = 1.0 * CM
+        self.ws.page_margins.header = 0
+        self.ws.page_margins.footer = 0
+        
+
+
 
     def save_file(self)->None:
-        new_folder = f'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/ \
-                                                 02Excel/{self.__closing_date}'
+        new_folder = f'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/02Excel/{self.__closing_date}'
         if self.__pf == 'Linux':
-            new_folder:str = f'/mnt/public/営業課ﾌｫﾙﾀﾞ/02請求書/ \
-                                                  02Excel/{self.__closing_date}'
+            new_folder:str = f'/mnt/public/営業課ﾌｫﾙﾀﾞ/02請求書/02Excel/{self.__closing_date}'
         os.makedirs(name=new_folder, exist_ok=True)
-        self.wb.save(filename= f'{new_folder}/{self.__closing_date}_ \
-                                                 {self.__customer_code}.xlsx')
+        self.wb.save(filename= f'{new_folder}/{self.__closing_date}_{self.__customer_code}.xlsx')
 
         excel = win32com.client.Dispatch("Excel.Application")
-        file = excel.Workbooks.Open(f'{new_folder}/{self.__closing_date}_ \
-                                                 {self.__customer_code}.xlsx')
+        file = excel.Workbooks.Open(f'{new_folder}/{self.__closing_date}_{self.__customer_code}.xlsx')
         try:
             file.Worksheets("1").Select()
-            pdf_folder = f'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/ \
-                                          03Pdf/01未提出/{self.__closing_date}'
+            pdf_folder = f'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/03Pdf/01未提出/{self.__closing_date}'
             os.makedirs(name= pdf_folder, exist_ok= True)
-            file.ActiveSheet.ExportAsFixedFormat(0, f'{pdf_folder}/ \
-                            {self.__closing_date}_{self.__customer_code}.pdf')
+            file.ActiveSheet.ExportAsFixedFormat(0, f'{pdf_folder}/{self.__closing_date}_{self.__customer_code}.pdf')
         except Exception as e:
             print(e)
         finally:
