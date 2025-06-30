@@ -20,7 +20,8 @@ class SqlBTSZAN:
                          " TszSeiZanK, TszUriKin1, TszNyuKin1, TszNyuKin7"
                          " FROM dbo.BTSZAN"
                          " WHERE TszSimeDay =" + self.SIME_DAY + 
-                         " AND TszTokCD < 'T6000'"
+                         " AND (TszTokCD < 'T6000'"
+                         " OR TszTokCD > 'W')"
                          " ORDER BY TszTokCD"
                         )
         sime_data:pd.DataFrame = pd.read_sql(sql_query, cnxn)
