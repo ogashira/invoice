@@ -2,8 +2,6 @@ class Sale:
     
     def __init__(self, sale_no, sale_date, hinban, hinmei,
                  sale_qty, tani, unit_price, sale_price, tekiyo)->None:
-        if tani == 'CN':
-            tani = '缶'
         self.__sale_no:str = sale_no
         self.__sale_date:str = sale_date
         self.__sale_hinban:str = hinban

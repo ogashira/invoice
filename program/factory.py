@@ -34,6 +34,7 @@ class Factory:
             yaml_data = yaml.safe_load(yaml_file)
         self.__instance_index_row = yaml_data['instanceIndex_saleExcelRow']
         self.__nyukin_kubun = yaml_data['nyukin_kubun']
+        self.__tani_code = yaml_data['tani_code']
 
         
 
@@ -72,8 +73,9 @@ class Factory:
                     sale_price:int = df_of_customer_sale.iloc[i,:]['RurUriKin']
                     tekiyo:str     = df_of_customer_sale.iloc[i,:]['RjcCMNo']
                     sale:Sale = Sale(sale_no, sale_date, hinban, hinmei,
-                                      sale_qty, tani, unit_price, sale_price,
-                                      tekiyo)
+                                     sale_qty, self.__tani_code[tani], 
+                                     unit_price, sale_price,
+                                     tekiyo)
                     sales.append(sale)
                     sales_deposits_date_set.add(sale_date)
 
