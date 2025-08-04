@@ -35,7 +35,7 @@ class Factory:
         self.__instance_index_row = yaml_data['instanceIndex_saleExcelRow']
         self.__nyukin_kubun = yaml_data['nyukin_kubun']
         self.__tani_code = yaml_data['tani_code']
-
+            
         
 
     def create_sales_deposits(self, customers:list)-> list:
@@ -72,8 +72,11 @@ class Factory:
                     unit_price:int = df_of_customer_sale.iloc[i,:]['RurUriTnk']
                     sale_price:int = df_of_customer_sale.iloc[i,:]['RurUriKin']
                     tekiyo:str     = df_of_customer_sale.iloc[i,:]['RjcCMNo']
+                    if tani != ' ':
+                        tani = self.__tani_code[tani]
+
                     sale:Sale = Sale(sale_no, sale_date, hinban, hinmei,
-                                     sale_qty, self.__tani_code[tani], 
+                                     sale_qty, tani, 
                                      unit_price, sale_price,
                                      tekiyo)
                     sales.append(sale)
@@ -170,7 +173,6 @@ class Factory:
         return invoices
                     
                     
-
 
 
 
