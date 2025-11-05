@@ -1,7 +1,8 @@
 class Sale:
     
     def __init__(self, sale_no, sale_date, hinban, hinmei,
-                 sale_qty, tani, unit_price, sale_price, tekiyo)->None:
+                 sale_qty, tani, unit_price, sale_price, 
+                 tekiyo, toriKbn)->None:
         self.__sale_no:str = sale_no
         self.__sale_date:str = sale_date
         self.__sale_hinban:str = hinban
@@ -11,6 +12,8 @@ class Sale:
         self.__sale_unit_price:int = unit_price
         self.__sale_price:int = sale_price
         self.__tekiyo:str = tekiyo
+        self.__toriKbn:str = toriKbn
+
 
     def filling_page_sales_deposits(self, excel, row_no, count_page_sum_row,
                                             sales_deposits_count, page_count)->None:
@@ -25,6 +28,7 @@ class Sale:
                                  self.__sale_unit_price,
                                  self.__sale_price,
                                  self.__tekiyo,
+                                 self.__toriKbn,
                                  page_count)
 
 

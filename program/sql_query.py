@@ -44,13 +44,11 @@ class SqlRURIDT:
                         " RURIDT.RurToriKBN, RURIDT.RurHinNam, RURIDT.RurUriTniCD,"
                         " RURIDT.RurKoSu, RURIDT.RurUriTnk, RURIDT.RurUriKin,"
                         " RURIDT.RurzeiTni, RURIDT.RurZeiKin, RURIDT.RurSeiYMDY,"
-                        " RURIDT.RurSeiUpFlg, RJYUCD.RjcCMNo"
+                        " RURIDT.RurSeiUpFlg, RURIDT.RurCMNo"
                         " From dbo.RURIDT"
-                        " LEFT JOIN dbo.RJYUCD"
-                        " ON RURIDT.RurJCNo = RJYUCD.RjcJCNo"
-                        " AND RURIDT.RurJGNo = RJYUCD.RjcJGNo"
                         " WHERE RurSeiYMDY =" + self.bill_day +
-                        " AND (RURIDT.RurToriKBN = 1 OR RURIDT.RurToriKBN = 3)"
+                        " AND (RURIDT.RurToriKBN = 1 OR RURIDT.RurToriKBN = 2"
+                        " OR RURIDT.RurToriKBN = 3)"
                         " ORDER BY RURIDT.RurSeiCD, RURIDT.RurUriDay, RURIDT.RurUNo"
                        )
         sales_data:pd.DataFrame = pd.read_sql(sql_query, cnxn)

@@ -71,14 +71,15 @@ class Factory:
                     tani:str       = df_of_customer_sale.iloc[i,:]['RurUriTniCD']
                     unit_price:int = df_of_customer_sale.iloc[i,:]['RurUriTnk']
                     sale_price:int = df_of_customer_sale.iloc[i,:]['RurUriKin']
-                    tekiyo:str     = df_of_customer_sale.iloc[i,:]['RjcCMNo']
+                    tekiyo:str     = df_of_customer_sale.iloc[i,:]['RurCMNo']
+                    toriKbn:str    = df_of_customer_sale.iloc[i,:]['RurToriKBN']
                     if tani != ' ':
                         tani = self.__tani_code[tani]
 
                     sale:Sale = Sale(sale_no, sale_date, hinban, hinmei,
                                      sale_qty, tani, 
                                      unit_price, sale_price,
-                                     tekiyo)
+                                     tekiyo, toriKbn)
                     sales.append(sale)
                     sales_deposits_date_set.add(sale_date)
 

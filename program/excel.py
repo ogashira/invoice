@@ -85,6 +85,7 @@ class Excel:
                            sale_unit_price,
                            sale_price,
                            tekiyo,
+                           toriKbn,
                            page_count)->None:
 
         last_page_sum_row = 0
@@ -93,9 +94,13 @@ class Excel:
         last_page_sum_row = 139 + (page_count -2) * 70
 
 
-        koumoku = '売上'
-        if sale_hinban == '999999':
+        koumoku: str = ''
+        if toriKbn == '01':
+            koumoku = '売上'
+        if toriKbn == '03':
             koumoku = '値引'
+        if toriKbn == '02':
+            koumoku = '返品'
         self.ws.cell(row=row_no, column=1).value = (sale_date[4:6] + '/' + 
                                                               sale_date[6:])
         self.ws.cell(row=row_no + 1, column=1).value = koumoku #type:ignore
