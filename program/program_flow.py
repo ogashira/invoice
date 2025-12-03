@@ -37,6 +37,7 @@ class ProgramFlow:
 
 
     def start(self)->None:
+
         print('請求書を作成しています。しばらくお待ちください....')
         factory:Factory = Factory(self.__df_sime, self.__df_sale, 
                                 self.__df_deposit, self.__df_customer)

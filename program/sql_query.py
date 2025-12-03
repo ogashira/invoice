@@ -64,15 +64,50 @@ class SqlRNYUKN:
     def __init__(self, SIME_DAY)->None:
         self.SIME_DAY = SIME_DAY
 
+
     def fetch_sqldata(self)->pd.DataFrame:
+
+        def is_end_of_month(date_to_check: datetime.datetime) -> bool:
+            """
+            指定された日付がその月の最終日であるかを判定する。
+            """
+            # 1. まず、次の月の1日を取得します。
+            #    現在の月に1ヶ月を足し、日の部分を1日に設定します。
+            first_day_of_next_month = (date_to_check +
+                                 relativedelta(months=1)).replace(day=1)
+
+            # 2. 次の月の1日から1日引くと、現在の月の最終日になります。
+            last_day_of_current_month = (first_day_of_next_month - 
+                                                     datetime.timedelta(days=1))
+
+            # 3. 元の日付の日と計算した最終日の日が一致するかを比較し す。
+            return date_to_check.day == last_day_of_current_month.day
+
+            
+        def calc_stt_day(sime_day: str)-> str:
+            '''
+            sime_dayが月末なら当月の1日を、それ以外は1月前の翌日を返す
+            '''
+            date_sime_day = datetime.datetime.strptime(sime_day, '%Y%m%d')
+            # １月前の翌日
+            date_stt_day = (date_sime_day - relativedelta(months=1) + 
+                                                      relativedelta(days=1))
+            # 月末だったら当月の１日
+            if is_end_of_month(date_sime_day):
+                date_stt_day = date_sime_day.replace(day=1)
+            
+            stt_day: str = date_stt_day.strftime('%Y%m%d')
+
+            return stt_day
+
+
         warnings.filterwarnings("ignore", category=UserWarning)
-        date_SIME_DAY:datetime.date = datetime.datetime.strptime(self.SIME_DAY, '%Y%m%d')
-        date_stt_day:datetime.date = (date_SIME_DAY - relativedelta(months=1) 
-                                      + relativedelta(days=1))
-        stt_day:str = date_stt_day.strftime('%Y%m%d')
+        stt_day:str = calc_stt_day(self.SIME_DAY)
 
         sql_server:SqlServer = SqlServer()
         cnxn = sql_server.get_cnxn()
+
+        print(stt_day, "~", self.SIME_DAY)
 
         sql_query:str = ("SELECT RnyNNo, RnyNGNo, RnySeiCD, RnyToriKBN,"
                         " RnyNyuDay, RnyNyuKin, RnyTegataDay, RnyTegataNo,"
