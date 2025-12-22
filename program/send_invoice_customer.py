@@ -32,11 +32,10 @@ class SendInvoiceCustomer:
 
 
     def send_invoice(self)-> List[str]: 
-        success_send_customer_codes = \
+        success_send_paths = \
                 self.send_mail.send_mail(self.__mail_to_customer_info, 
                                                       self.__attachment_files)
-
-        return success_send_customer_codes
+        return success_send_paths
 
     def show_customer_code(self)-> str:
         return self.__mail_to_customer_info['customer_code']

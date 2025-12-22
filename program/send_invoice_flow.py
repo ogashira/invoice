@@ -1,6 +1,6 @@
 import datetime
+from re import sub
 import sys
-import pprint
 import platform
 from typing import List
 from send_invoice_check import SendInvoiceCheck
@@ -102,8 +102,9 @@ class SendInvoiceFlow:
                 if submission_invoices:
                     print()
                     print(f'提出が必要なinvoiceは以下の{len(submission_invoices)}個です')
-                    pprint.pprint(submission_invoices)
-                    f.write(f'提出が必要なinvoiceは以下の{len(submission_invoices)}個です')
+                    for submission_invoice in submission_invoices:
+                        print(submission_invoice)
+                    f.write(f'提出が必要なinvoiceは以下の{len(submission_invoices)}個です\n')
                     for invoice in submission_invoices:
                         f.write(invoice)
                         f.write('\n')
@@ -143,13 +144,22 @@ class SendInvoiceFlow:
             send_invoice_customers.append(send_invoice_customer)
 
         
-        success_send_customer_codes = []
+        success_send_paths = []
         for send_invoice_customer in send_invoice_customers:
-            print(send_invoice_customer.show_customer_code())
-            success_send_customer_codes.append(send_invoice_customer.send_invoice())
+            success_send_paths.append(send_invoice_customer.send_invoice())
 
-        print(success_send_customer_codes)
-
-        print(is_test)
-        
-
+        print('\n')
+        print('送信に成功した請求書pdf')
+        cnt: int = 0
+        for success_send_path in success_send_paths:
+            for line in success_send_path:
+                print(line)
+                cnt += 1
+        print(f'成功: {cnt}個')
+        with open(log_path, 'a') as f:
+            f.write('\n')
+            f.write('>>>>>>送信に成功した請求書pdf<<<<<<\n')
+            for success_send_path in success_send_paths:
+                for line in success_send_path:
+                    f.write(line + '\n')
+            f.write(f'成功: {cnt}個\n')

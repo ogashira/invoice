@@ -38,8 +38,7 @@ class SendMail(object):
         mailAddress: str = info['to_main']
         # ccのリストの最後にmatsudoアドレスを追加する
         ccs: List[str] = info['to_ccs']
-        # TODO 下記#を外す
-        # ccs.append('h_matsudo@toyo-jupiter.co.jp')
+        ccs.append('h_matsudo@toyo-jupiter.co.jp')
 
         charset = 'utf-8'
 
@@ -98,15 +97,13 @@ class SendMail(object):
                 smtp = smtplib.SMTP(smtp_host, smtp_port)
                 smtp.login(username, password)
                 smtp.send_message(msg)
-                success_send_mail.append(customer_code)
+                success_send_mail.append(os.path.basename(file_path))
                 #success_send_mail.append(destination)
                 smtp.quit
                 move_successSendCsvFiles(file_path,  dst_folder)
             except Exception:
                 print('mail送信失敗')
 
-        print('missingfile')
-        print(missing_files)
 
 
         return success_send_mail
