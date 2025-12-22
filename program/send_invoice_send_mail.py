@@ -108,21 +108,3 @@ class SendMail(object):
 
         return success_send_mail
 
-
-    
-
-    def get_finally_fail_mail(self, zipfile_info, success_send_mail):
-        '''
-        最終的に送信できなかった向け先を求める
-        zipで失敗したり、送信でｴﾗｰになったりしたもの
-        zipfile_infoの中身を１つずつ回して、success_send_mail
-        に存在していなければ、finally_fail_mailにappendする
-        '''
-
-        finally_fail_mail = []
-        for info in zipfile_info:
-            if info not in success_send_mail:
-                finally_fail_mail.append(info)
-        return finally_fail_mail
-
-

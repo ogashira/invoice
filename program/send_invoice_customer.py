@@ -37,5 +37,9 @@ class SendInvoiceCustomer:
                                                       self.__attachment_files)
         return success_send_paths
 
+
     def show_customer_code(self)-> str:
+        '''
+        これは使っていない
+        '''
         return self.__mail_to_customer_info['customer_code']
