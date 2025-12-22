@@ -1,7 +1,6 @@
 import sys
 from numpy import empty
 import pandas as pd
-import time
 
 from sql_query import SqlRURIDT
 from sql_query import SqlRNYUKN
@@ -57,7 +56,6 @@ class ProgramFlow:
         cnt:int = 0
         for invoice in invoices:
             invoice.filling_page_invoice()
-            time.sleep(15)
             cnt += 1
             print(f'{cnt}/{len(invoices)}個の請求書を作成しました。')
 

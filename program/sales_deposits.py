@@ -10,27 +10,66 @@ class SalesDeposits:
         self.__sales_deposits_date_list:list = sorted(
                                              list(sales_deposits_date_set))
 
-        self.__sales_deposits:list = []
+        self.__sales_and_deposits:list = []
         # 売上日、入金日が小さい順にsalesとdepositのインスタンスを詰める
         # 売上日と入金日が重なった時は入金日を先にする。
 
-        self.__create_sales_deposits() 
+        self.__create_sales_and_deposits() 
 
 
-    def __create_sales_deposits(self)->None:
+    def is_only_free_samples(self)->bool:
+        '''
+        Invoiceクラスから呼ばれる
+        明細がサンプルのみなのかどうか？の判定
+        self.__salesが0より大きくて、金額の合計が0の場合は全てサンプル
+        なのでTrueが返る
+        '''
+        price: int = 0
+        for sale in self.__sales:
+            price += sale.get_sale_price()
+        
+        return len(self.__sales) > 0 and price == 0
+
+
+    def is_exist_paid_item(self)->bool:
+        '''
+        有償サンプルまたは有償の製品が存在するか？
+        '''
+        price: int = 0
+        for sale in self.__sales:
+            price += sale.get_sale_price()
+        
+        return len(self.__sales) > 0 and price > 0
+
+
+    def is_only_deposits(self)-> bool:
+        '''
+        明細に有償品も無償品もないパターン == 入金しかないパターン
+        '''
+        price: int = 0
+        for sale in self.__sales:
+            price += sale.get_sale_price()
+
+        return len(self.__sales) == 0 and price ==0
+
+
+    def __create_sales_and_deposits(self)->None:
         for date in self.__sales_deposits_date_list:
             for deposit in self.__deposits:  # 入金日を優先
                 if deposit.is_date_matched(date):
-                    self.__sales_deposits.append(deposit)
+                    self.__sales_and_deposits.append(deposit)
             for sale in self.__sales:
                 if sale.is_date_matched(date):
-                    self.__sales_deposits.append(sale)
+                    self.__sales_and_deposits.append(sale)
+
 
     def is_customer_matched(self, customer_code)->bool:
         return self.__customer_code == customer_code
 
+
     def calc_sales_deposits_count(self)->int:
-        return len(self.__sales_deposits)
+        return len(self.__sales_and_deposits)
+
 
     def filling_page_sales_deposits(self, excel, page_count, 
                                     sales_deposits_count)->None:
@@ -47,10 +86,10 @@ class SalesDeposits:
         count_page_sum_row:int = 0
         first_row_no:int = 0
         while True:
-            if instances_count >= len(self.__sales_deposits):
+            if instances_count >= len(self.__sales_and_deposits):
                 break
             
-            instance = self.__sales_deposits[instances_count] #インスタンス
+            instance = self.__sales_and_deposits[instances_count] #インスタンス
             if instances_count in self.__instance_index_row:
                 row_no = self.__instance_index_row[instances_count]
                 first_row_no = self.__instance_index_row[instances_count]

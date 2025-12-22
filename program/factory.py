@@ -35,7 +35,17 @@ class Factory:
         self.__instance_index_row = yaml_data['instanceIndex_saleExcelRow']
         self.__nyukin_kubun = yaml_data['nyukin_kubun']
         self.__tani_code = yaml_data['tani_code']
-            
+
+        email_path: str = \
+        r'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/01Master/test_email_address.xlsx'
+        if platform.system() == 'Linux':
+            email_path = \
+            r'/mnt/public/営業課ﾌｫﾙﾀﾞ/02請求書/01Master/test_email_address.xlsx'
+
+        self.__email_info = pd.read_excel(email_path, sheet_name='mail')
+        
+
+
         
 
     def create_sales_deposits(self, customers:list)-> list:
@@ -134,7 +144,7 @@ class Factory:
         
             
     def create_invoice(self, list_customers, sales_deposits, customers,
-                                                              TAX_RATE )-> list:
+                                                             TAX_RATE)-> list:
 
         invoices:object = []
         for customer_code in list_customers:
@@ -169,7 +179,8 @@ class Factory:
                     invoice:Invoice = Invoice(customer_code, 
                                       last_balance, deposit, sales_price,
                                       tax, billed_price, ins_customer, 
-                                      ins_sales_deposits, excel, TAX_RATE)
+                                      ins_sales_deposits, excel, TAX_RATE,
+                                      self.__email_info)
                     invoices.append(invoice)                    
         return invoices
                     

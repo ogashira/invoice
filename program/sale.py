@@ -32,5 +32,9 @@ class Sale:
                                  page_count)
 
 
+    def get_sale_price(self)->int:
+        return self.__sale_price
+
+
     def is_date_matched(self, date)->bool:
         return date == self.__sale_date

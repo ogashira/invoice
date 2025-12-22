@@ -1,3 +1,4 @@
+import time
 import platform
 import os
 import openpyxl
@@ -196,7 +197,12 @@ class Excel:
 
 
 
-    def save_file(self)->None:
+    def save_file(self, is_post)->None:
+
+        post_is_do_not_is:str = 'n'
+        if is_post:
+            post_is_do_not_is = 'y'
+
         new_folder = f'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/02Excel/{self.__closing_date}'
         if self.__pf == 'Linux':
             new_folder:str = f'/mnt/public/営業課ﾌｫﾙﾀﾞ/02請求書/02Excel/{self.__closing_date}'
@@ -204,15 +210,23 @@ class Excel:
         self.wb.save(filename= f'{new_folder}/{self.__closing_date}_{self.__customer_code}.xlsx')
 
         excel = win32com.client.Dispatch("Excel.Application")
+        excel.Visible = False # Excelを見えなくする
         file = excel.Workbooks.Open(f'{new_folder}/{self.__closing_date}_{self.__customer_code}.xlsx')
+        #time.sleep(15)
         try:
             file.Worksheets("1").Select()
-            pdf_folder = f'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/03Pdf/01未提出/{self.__closing_date}'
+            pdf_folder = f'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/03Pdf/{self.__closing_date}/01未提出'
             os.makedirs(name= pdf_folder, exist_ok= True)
-            file.ActiveSheet.ExportAsFixedFormat(0, f'{pdf_folder}/{self.__closing_date}_{self.__customer_code}.pdf')
+            file.ActiveSheet.ExportAsFixedFormat(0, f'{pdf_folder}/{self.__closing_date}_{self.__customer_code}_{post_is_do_not_is}_.pdf')
+            submitted_folder = f'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/03Pdf/{self.__closing_date}/02提出済'
+            os.makedirs(name= submitted_folder, exist_ok= True)
         except Exception as e:
             print(e)
         finally:
-            file.Close()
+            file.Close() # ワークブックを閉じる
+            excel.Quit() # Excelアプリケーションプロセスを終了(タスクマネージャーからも消えるようにする)
+            del file     # ヒープのメモリ解放(COMオブジェクトへの参照)
+            del excel    # ヒープのメモリ解放(COMオブジェクトへの参照)
+
 
 
