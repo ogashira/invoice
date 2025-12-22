@@ -57,6 +57,7 @@ class SendInvoiceFlow:
             if customer_code == invoice.split('_')[1]:
                 attachment_files.append(f'{stt_path}/{invoice}')
 
+
         return attachment_files
 
 
@@ -130,7 +131,7 @@ class SendInvoiceFlow:
         # Costomerのインスタンスを生成する
         send_invoice_customers: List[SendInvoiceCustomer] = []
         for customer_code in unique_customer_codes:
-            mail_info: pd.FataFrame = \
+            mail_info: pd.DataFrame = \
                     mail_infos.loc[mail_infos['得意先CD'] == customer_code,:]
             attachment_files: List[str] = self.create_attachment_files(
                                           customer_code, 
@@ -143,6 +144,7 @@ class SendInvoiceFlow:
                                         attachment_files,
                                         send_mail)
             send_invoice_customers.append(send_invoice_customer)
+
 
         
         success_send_paths = []

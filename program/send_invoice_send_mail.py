@@ -92,17 +92,17 @@ class SendMail(object):
             msg.attach(attach)
 
            #/192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/03Pdf/20251031/02提出済
-            dst_folder: str = '/'.join(file_path.split('/')[:-2]) + '/02提出済'
-            try:
-                smtp = smtplib.SMTP(smtp_host, smtp_port)
-                smtp.login(username, password)
-                smtp.send_message(msg)
+        try:
+            smtp = smtplib.SMTP(smtp_host, smtp_port)
+            smtp.login(username, password)
+            smtp.send_message(msg)
+            smtp.quit
+            for file_path in attachment_files:
+                dst_folder: str = '/'.join(file_path.split('/')[:-2]) + '/02提出済'
                 success_send_mail.append(os.path.basename(file_path))
-                #success_send_mail.append(destination)
-                smtp.quit
                 move_successSendCsvFiles(file_path,  dst_folder)
-            except Exception:
-                print('mail送信失敗')
+        except Exception:
+            print('mail送信失敗')
 
 
 
