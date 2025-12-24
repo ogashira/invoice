@@ -1,6 +1,8 @@
 import platform
 import pandas as pd
 import yaml
+import sys
+from typing import List
 
 from deposit import Deposit
 from sale import Sale
@@ -37,15 +39,20 @@ class Factory:
         self.__tani_code = yaml_data['tani_code']
 
         email_path: str = \
-        r'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/01Master/test_email_address.xlsx'
+        r'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/01Master/email_address.xlsx'
         if platform.system() == 'Linux':
             email_path = \
-            r'/mnt/public/営業課ﾌｫﾙﾀﾞ/02請求書/01Master/test_email_address.xlsx'
+            r'/mnt/public/営業課ﾌｫﾙﾀﾞ/02請求書/01Master/email_address.xlsx'
+
+        args: List[str] = sys.argv
+        if args[1] == "test" or args[1] == "TEST":
+            email_path: str = \
+            r'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/01Master/test_email_address.xlsx'
+            if platform.system() == 'Linux':
+                email_path = \
+                r'/mnt/public/営業課ﾌｫﾙﾀﾞ/02請求書/01Master/test_email_address.xlsx'
 
         self.__email_info = pd.read_excel(email_path, sheet_name='mail')
-        
-
-
         
 
     def create_sales_deposits(self, customers:list)-> list:
@@ -145,6 +152,7 @@ class Factory:
             
     def create_invoice(self, list_customers, sales_deposits, customers,
                                                              TAX_RATE)-> list:
+        closing_date: str = self.__df_sime.loc[0,  'TszSimeDay']
 
         invoices:object = []
         for customer_code in list_customers:
@@ -152,9 +160,9 @@ class Factory:
                     self.__df_sime[self.__df_sime['TszTokCD']
                                                        == customer_code])
             if df_of_customer_sime is not None:
+                
+
                 for i in range(len(df_of_customer_sime)):
-                    closing_date:str = (df_of_customer_sime.iloc[i,:]
-                                                            ['TszSimeDay'])
                     last_balance:int = (df_of_customer_sime.iloc[i,:]
                                                             ['TszSeiZanZ'])
                     deposit:int = df_of_customer_sime.iloc[i,:]['TszNyuKinT']
@@ -174,7 +182,7 @@ class Factory:
                                       is_customer_matched(customer_code)):
                             ins_sales_deposits:object = one_of_sales_deposits
 
-                    excel:Excel = Excel(customer_code, closing_date)
+                    excel:Excel = Excel(closing_date)
 
                     invoice:Invoice = Invoice(customer_code, 
                                       last_balance, deposit, sales_price,

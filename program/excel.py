@@ -12,7 +12,7 @@ from openpyxl.worksheet.worksheet import Worksheet
 
 class Excel:
 
-    def __init__(self, customer_code, closing_date)->None:
+    def __init__(self, closing_date)->None:
         self.__pf:str = platform.system()
         if self.__pf == 'Windows':
             path = r'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/01Master/invoice_format.xlsx'
@@ -24,11 +24,10 @@ class Excel:
                                                                  data_only=True)
         self.ws:Worksheet = self.wb['1']
 
-        self.__customer_code:str= customer_code
         self.__closing_date:str = closing_date
 
     def filling_page_invoice(self, last_balance, deposit, carryover_price, 
-                             sales_price, tax, billed_price, TAX_RATE, 
+                             sales_price, tax, billed_price, TAX_RATE 
                             )->None:
         '''
         1ページにしか記載されない情報
@@ -45,7 +44,7 @@ class Excel:
         self.ws.cell(row=24, column=23 ).value = tax
 
 
-    def filling_page_customer(self, customer_nam1, customer_nam2, 
+    def filling_page_customer(self, customer_code, customer_nam1, customer_nam2, 
                               customer_nam3, customer_pos1, customer_pos2,
                               customer_addr1, customer_addr2, customer_addr3,
                               page_count)->None:
@@ -56,7 +55,7 @@ class Excel:
 
         for i in range(page_count):
             self.ws.cell(row=i*70+1, column=40).value = page_count
-            self.ws.cell(row=i*70+6, column=2).value = self.__customer_code #type:ignore
+            self.ws.cell(row=i*70+6, column=2).value = customer_code #type:ignore
             self.ws.cell(row=i*70+2, column=26).value = (self.__closing_date[:4]  + '年' + #type:ignore
                                          self.__closing_date[4:6] + '月' + 
                                          self.__closing_date[6:])
@@ -197,7 +196,7 @@ class Excel:
 
 
 
-    def save_file(self, is_post)->None:
+    def save_file(self, is_post, customer_code)->None:
 
         post_is_do_not_is:str = 'n'
         if is_post:
@@ -207,17 +206,17 @@ class Excel:
         if self.__pf == 'Linux':
             new_folder:str = f'/mnt/public/営業課ﾌｫﾙﾀﾞ/02請求書/02Excel/{self.__closing_date}'
         os.makedirs(name=new_folder, exist_ok=True)
-        self.wb.save(filename= f'{new_folder}/{self.__closing_date}_{self.__customer_code}.xlsx')
+        self.wb.save(filename= f'{new_folder}/{self.__closing_date}_{customer_code}.xlsx')
 
         excel = win32com.client.Dispatch("Excel.Application")
         excel.Visible = False # Excelを見えなくする
-        file = excel.Workbooks.Open(f'{new_folder}/{self.__closing_date}_{self.__customer_code}.xlsx')
+        file = excel.Workbooks.Open(f'{new_folder}/{self.__closing_date}_{customer_code}.xlsx')
         #time.sleep(15)
         try:
             file.Worksheets("1").Select()
             pdf_folder = f'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/03Pdf/{self.__closing_date}/01未提出'
             os.makedirs(name= pdf_folder, exist_ok= True)
-            file.ActiveSheet.ExportAsFixedFormat(0, f'{pdf_folder}/{self.__closing_date}_{self.__customer_code}_{post_is_do_not_is}_.pdf')
+            file.ActiveSheet.ExportAsFixedFormat(0, f'{pdf_folder}/{self.__closing_date}_{customer_code}_{post_is_do_not_is}_.pdf')
             submitted_folder = f'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/03Pdf/{self.__closing_date}/02提出済'
             os.makedirs(name= submitted_folder, exist_ok= True)
         except Exception as e:

@@ -17,7 +17,8 @@ class Customer:
         return self.__customer_code == customer_code
 
     def filling_page_customer(self, excel, page_count) -> None:
-        excel.filling_page_customer(self.__customer_nam1,
+        excel.filling_page_customer(self.__customer_code,
+                                    self.__customer_nam1,
                                     self.__customer_nam2,
                                     self.__customer_nam3,
                                     self.__customer_pos1,

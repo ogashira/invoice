@@ -17,40 +17,60 @@ class SalesDeposits:
         self.__create_sales_and_deposits() 
 
 
-    def is_only_free_samples(self)->bool:
+    def is_exist_free_samples(self)->bool:
         '''
         Invoiceクラスから呼ばれる
-        明細がサンプルのみなのかどうか？の判定
-        self.__salesが0より大きくて、金額の合計が0の場合は全てサンプル
-        なのでTrueが返る
+        無償サンプルがあるのかを判定
+        明細数が0より大きくて、
+        単価が0のものが1つ以上あるか。
         '''
-        price: int = 0
+        if len(self.__sales) == 0:
+            return False
+
+        pattern: bool = False
         for sale in self.__sales:
-            price += sale.get_sale_price()
+            if sale.get_sale_unit_price() > 0:
+                pattern = True
+                break
         
-        return len(self.__sales) > 0 and price == 0
+        return pattern
 
 
-    def is_exist_paid_item(self)->bool:
+    def is_exist_paid_items(self)->bool:
         '''
         有償サンプルまたは有償の製品が存在するか？
+        明細数が0より大きくて、
+        数量が1以上で単価が0より大きいものが1つ以上ある
         '''
-        price: int = 0
+        if len(self.__sales) == 0:
+            return False
+
+        pattern: bool = False
         for sale in self.__sales:
-            price += sale.get_sale_price()
+            if sale.get_sale_qty() > 0 and sale.get_sale_unit_price() > 0:
+                pattern = True
+                break
+            
+        return pattern
+
+
+    def is_exist_returns(self)-> bool:
+        '''
+        明細に返品が存在するか？
+        明細数が0より大きくて、
+        数量が0より小さいものが1つ以上あるか。
+        '''
+        if len(self.__sales) == 0:
+            return False
+
+        pattern: bool = False
+        for sale in self.__sales:
+            if sale.get_sale_qty() < 0:
+                pattern = True
+                break
         
-        return len(self.__sales) > 0 and price > 0
+        return pattern
 
-
-    def is_only_deposits(self)-> bool:
-        '''
-        明細に有償品も無償品もないパターン == 入金しかないパターン
-        '''
-        price: int = 0
-        for sale in self.__sales:
-            price += sale.get_sale_price()
-
-        return len(self.__sales) == 0 and price ==0
 
 
     def __create_sales_and_deposits(self)->None:

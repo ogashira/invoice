@@ -34,24 +34,38 @@ class Invoice:
 
 
     def judge_should_post(self)->bool:
-        # patternを求める, 
-        # exist_paid_item, only_free_samples, only_deposits
-        sales_pattern: str = '明細に無償品も有償品もないパターン'
-        if self.__sales_deposits.is_only_free_samples():
-            sales_pattern = '明細に無償品しかないパターン'
-        if self.__sales_deposits.is_exist_paid_item():
-            sales_pattern = '明細に有償品があるパターン'
+        is_exist_free_samples: bool = \
+                self.__sales_deposits.is_exist_free_samples()
+        is_exist_paid_items: bool = \
+                self.__sales_deposits.is_exist_paid_items()
+        is_exist_returns: bool = \
+                self.__sales_deposits.is_exist_returns()
+        is_exist_deposits: bool = False
+        if self.__deposit > 0:
+            is_exist_deposits = True
+                
 
-        # 得意先CDがない場合はFalseリターン
+        # email_address.xlsxに得意先CDがない場合はFalseリターン
         if len(self.__email_info.loc[self.__email_info['得意先CD'] == 
                                                     self.__customer_code,:])==0:
             return False
         
-        if (self.__email_info.loc[self.__email_info['得意先CD'] == 
-                            self.__customer_code, sales_pattern].iloc[0]== 'n'):
-            return False
-        
-        return True
+        '''
+        2025/12/24現在では、有償品または返品がある場合だけ請求書を送信する
+        '''
+        if is_exist_paid_items or is_exist_returns:
+            return True
+
+        '''
+        #TODO後で消す
+        print(f'{self.__customer_code}->'  
+              f'無償品:{is_exist_free_samples},' 
+              f'有償品:{is_exist_paid_items},' 
+              f'返品:{is_exist_returns},' 
+              f'入金:{is_exist_deposits}') 
+        '''
+
+        return False
 
 
     def calc_invoices_page_count(self)->int:
@@ -79,4 +93,4 @@ class Invoice:
                                                 )
         
         self.__excel.arrange_sheets(self.__invoices_page_count)
-        self.__excel.save_file(self.__is_post)
+        self.__excel.save_file(self.__is_post, self.__customer_code)

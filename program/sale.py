@@ -32,8 +32,16 @@ class Sale:
                                  page_count)
 
 
+    def get_sale_qty(self)->int:
+        return self.__sale_qty
+
+
     def get_sale_price(self)->int:
         return self.__sale_price
+
+
+    def get_sale_unit_price(self)->int:
+        return self.__sale_unit_price
 
 
     def is_date_matched(self, date)->bool:
