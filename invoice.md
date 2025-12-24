@@ -31,9 +31,10 @@ GitHub Publicリポジトリで公開</br>
 ### 起動方法
 ##### 請求書作成プロセス
 - `Winボタン+R -> i 入力 -> Enter`または`invoice/program`デイレクトリ内にて`python main.py`で実行
+- **テストの場合**:  `Winボタン+R -> i test 入力 -> Enter`または`invoice/program`デイレクトリ内にて`python main.py test`で実行 -> `\\192.168.1.247\共有\営業課ﾌｫﾙﾀﾞ\02請求書\01Master\test_email_address.xlsx`の情報から請求書が作成される
 ##### 請求書送信プロセス
 - `Winボタン+R -> si 入力 -> Enter`または`invoice/program`デイレクトリ内にて`python send_invoice_main.py`で実行 -> `\\192.168.1.247\共有\営業課ﾌｫﾙﾀﾞ\02請求書\01Master\test_email_address.xlsx`のアドレスに送信される
-- **テストの場合**:  `Winボタン+R -> is test 入力 -> Enter`または`invoice/program`デイレクトリ内にて`python send_invoice_main.py test`で実行 -> `\\192.168.1.247\共有\営業課ﾌｫﾙﾀﾞ\02請求書\01Master\test_email_address.xlsx`のアドレスに送信される
+- **テストの場合**:  `Winボタン+R -> si test 入力 -> Enter`または`invoice/program`デイレクトリ内にて`python send_invoice_main.py test`で実行 -> `\\192.168.1.247\共有\営業課ﾌｫﾙﾀﾞ\02請求書\01Master\test_email_address.xlsx`のアドレスに送信される
 
 ### 動作
 ```
@@ -82,6 +83,11 @@ GitHub Publicリポジトリで公開</br>
 1. メール送信が成功したpdfファイルは`01未提出`フォルダから`02提出済`フォルダに移動される。
 1. 送信成功したpdfファイルがコンソールに表示される。
 1. 一連の動作で表示された経過は`02請求書/03Pdf/20251031/invoice_log.txt`に保存される。
+###### 追加の請求書がある場合
+- `<任意の名前>_<得意先CD>_y_.pdf(例：10-31追加_T2880_y_.pdf)`として`01未提出`フォルダに入れておくと、pdfファイルを複数添付して送信してくれる。ファイル数は何個でもOK。ただし、命名方法は必ず以下に従うこと。
+    - <任意の名前>は何文字でもOKだが、`_`を使ってはダメ。
+    - <任意の名前>と<得意先CD>は必ず`_`でつなぐこと。
+    - <得意先CD>の後には`_y_.pdf`で終わらせること。
 
 ## クラス図っぽいやつ(日本語概念)
 ```mermaid
