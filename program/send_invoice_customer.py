@@ -22,6 +22,8 @@ class SendInvoiceCustomer:
                                                 mail_info.loc[:,'部署'].iloc[0]
         self.__mail_to_customer_info['tantou_name'] = \
                                               mail_info.loc[:,'担当者'].iloc[0]
+        self.__mail_to_customer_info['title'] = \
+                                              mail_info.loc[:,'件名'].iloc[0]
         self.__mail_to_customer_info['to_main'] = \
                mail_info.loc[mail_info['main or cc'] == 'main','Email'].iloc[0]
         self.__mail_to_customer_info['to_ccs'] = \

@@ -35,6 +35,7 @@ class SendMail(object):
         office_name: str = info['office_name'] 
         busyo_name: str = info['busyo_name']
         tantou_name: str = info['tantou_name']
+        title: str = info['title']
         mailAddress: str = info['to_main']
         # ccのリストの最後にmatsudoアドレスを追加する
         ccs: List[str] = info['to_ccs']
@@ -49,6 +50,9 @@ class SendMail(object):
         password = self.__yaml_data['eigyou']['password']
         from_address = self.__yaml_data['eigyou']['from_address']
         to_address = mailAddress
+
+        if title.startswith('~年'):
+            title = f'{year}年{month}月度 ご請求書'
         
 
         body = MIMEText(
@@ -66,7 +70,7 @@ class SendMail(object):
 
         msg = MIMEMultipart()
 
-        msg['Subject'] = Header('請求書', charset)
+        msg['Subject'] = Header(title, charset)
         msg['From'] = from_address
         msg['To'] = to_address
         msg['Cc'] = ', '.join(ccs)
