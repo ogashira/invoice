@@ -78,6 +78,7 @@ class SendMail(object):
 
 
         missing_files = []
+        tmp: List[str] = []
         for file_path in attachment_files:
             if not os.path.exists(file_path):
                 missing_files.append(file_path)
@@ -95,13 +96,17 @@ class SendMail(object):
                                   filename = os.path.basename(file_path))
             msg.attach(attach)
 
+            # file_pathをtmpに詰めて、その順番で次のFor文で使う
+            tmp.append(file_path)
+
            #/192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/03Pdf/20251031/02提出済
         try:
             smtp = smtplib.SMTP(smtp_host, smtp_port)
             smtp.login(username, password)
             smtp.send_message(msg)
             smtp.quit
-            for file_path in attachment_files:
+            # 上のfor文で呼ばれた順番にtmpに詰まっている
+            for file_path in tmp:
                 dst_folder: str = '/'.join(file_path.split('/')[:-2]) + '/02提出済'
                 success_send_mail.append(os.path.basename(file_path))
                 move_successSendCsvFiles(file_path,  dst_folder)
