@@ -1,30 +1,37 @@
 import sys
-from numpy import empty
 import pandas as pd
+from typing import Dict
 
-from sql_query import SqlRURIDT
+from sql_query import ISelectData, SqlRURIDT
 from sql_query import SqlRNYUKN
 from sql_query import SqlBTSZAN
 from sql_query import SqlMTOKUI
+from sql_query import SqlMTANIM
 from factory import Factory
 
 class ProgramFlow:
 
     def __init__(self, SIME_DAY:str, TAX_RATE:str)->None:
+
         self.__df_sime:pd.DataFrame = pd.DataFrame()
         self.__df_sale:pd.DataFrame = pd.DataFrame()
         self.__df_deposit:pd.DataFrame = pd.DataFrame()
         self.__df_customer:pd.DataFrame = pd.DataFrame()
 
-        sql_zan:SqlBTSZAN = SqlBTSZAN(SIME_DAY)
+        sql_zan:ISelectData = SqlBTSZAN(SIME_DAY)
         self.__df_sime:pd.DataFrame = sql_zan.fetch_sqldata()
-        sql_uri:SqlRURIDT = SqlRURIDT(SIME_DAY)
+        sql_uri:ISelectData = SqlRURIDT(SIME_DAY)
         self.__df_sale:pd.DataFrame = sql_uri.fetch_sqldata()
-        sql_iri:SqlRNYUKN = SqlRNYUKN(SIME_DAY)
+        sql_iri:ISelectData = SqlRNYUKN(SIME_DAY)
         self.__df_deposit:pd.DataFrame = sql_iri.fetch_sqldata()
-        sql_tokui:SqlMTOKUI = SqlMTOKUI()
+        sql_tokui:ISelectData = SqlMTOKUI()
         self.__df_customer:pd.DataFrame = sql_tokui.fetch_sqldata()
         self.__TAX_RATE = TAX_RATE
+        sql_tani:ISelectData = SqlMTANIM()
+        df_tani:pd.DataFrame = sql_tani.fetch_sqldata()
+        # dfを辞書に変換
+        self.tani_code:Dict = dict(zip(df_tani['TniTniCD'],
+                                                df_tani['TniTniNam']))
 
 
         if not len(self.__df_sime):
@@ -42,7 +49,8 @@ class ProgramFlow:
                                 self.__df_deposit, self.__df_customer)
 
         sales_deposits:list = []
-        sales_deposits = factory.create_sales_deposits(self.__customers)
+        sales_deposits = \
+        factory.create_sales_deposits(self.__customers, self.tani_code)
         # SalesDepositsの配列
 
         customers:list = []

@@ -36,7 +36,6 @@ class Factory:
             yaml_data = yaml.safe_load(yaml_file)
         self.__instance_index_row = yaml_data['instanceIndex_saleExcelRow']
         self.__nyukin_kubun = yaml_data['nyukin_kubun']
-        self.__tani_code = yaml_data['tani_code']
 
         email_path: str = \
         r'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/01Master/email_address.xlsx'
@@ -45,7 +44,7 @@ class Factory:
             r'/mnt/public/営業課ﾌｫﾙﾀﾞ/02請求書/01Master/email_address.xlsx'
 
         args: List[str] = sys.argv
-        if args[1] == "test" or args[1] == "TEST":
+        if len(args) > 1 and (args[1] == "test" or args[1] == "TEST"):
             email_path: str = \
             r'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/01Master/test_email_address.xlsx'
             if platform.system() == 'Linux':
@@ -55,7 +54,7 @@ class Factory:
         self.__email_info = pd.read_excel(email_path, sheet_name='mail')
         
 
-    def create_sales_deposits(self, customers:list)-> list:
+    def create_sales_deposits(self, customers:list, tani_code)-> list:
         '''
         SalesDepositsクラスのインスタンスを作る
         SaleクラスのインスタンスとDepositクラスのインスタンスを
@@ -91,7 +90,7 @@ class Factory:
                     tekiyo:str     = df_of_customer_sale.iloc[i,:]['RurCMNo']
                     toriKbn:str    = df_of_customer_sale.iloc[i,:]['RurToriKBN']
                     if tani != ' ':
-                        tani = self.__tani_code[tani]
+                        tani = tani_code[tani]
 
                     sale:Sale = Sale(sale_no, sale_date, hinban, hinmei,
                                      sale_qty, tani, 

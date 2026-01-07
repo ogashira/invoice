@@ -1,19 +1,48 @@
 import warnings
+import sys
 import datetime
 import pandas as pd
+import platform
 from dateutil.relativedelta import relativedelta
-from sql_server import SqlServer
+from abc import ABC, abstractmethod
+
+warnings.filterwarnings('ignore', category=UserWarning)
 
 
-class SqlBTSZAN:
+class ISelectData(ABC):
+    def __init__(self)->None:
+        '''
+        サーバーにあるsql_server.pyをモジュールとして使う
+        importするためにsys.path.appendでpathを認識させて
+        importと生成を行う
+        '''
+        shared_folder_path:str = r'./'
+        if platform.system() == 'Linux':
+            shared_folder_path = r'/mnt/public/技術課ﾌｫﾙﾀﾞ/200. effit_data/ﾏｽﾀ/sql_python_module'
+        elif platform.system() == 'Windows':
+            shared_folder_path = r'//192.168.1.247/共有/技術課ﾌｫﾙﾀﾞ/200. effit_data/ﾏｽﾀ/sql_python_module'
+        else:
+            pass
+
+        sys.path.append(shared_folder_path)
+        from sql_server import SqlServer
+        self.sql_server:SqlServer = SqlServer()
+
+
+    @abstractmethod
+    def fetch_sqldata(self)-> pd.DataFrame:
+        pass
+
+
+class SqlBTSZAN(ISelectData):
 
     def __init__(self, SIME_DAY)->None:
+        super().__init__()
         self.SIME_DAY = SIME_DAY
       
     def fetch_sqldata(self)->pd.DataFrame:
         warnings.filterwarnings("ignore", category=UserWarning)
-        sql_server:SqlServer = SqlServer()
-        cnxn = sql_server.get_cnxn()
+        cnxn = self.sql_server.get_cnxn()
 
         sql_query:str = ("SELECT TszTokCD, TszSimeDay, TszSeiZanZ, TszUriKinT," 
                          " TszZeiKinT, TszNyuKinT,"
@@ -25,19 +54,20 @@ class SqlBTSZAN:
                          " ORDER BY TszTokCD"
                         )
         sime_data:pd.DataFrame = pd.read_sql(sql_query, cnxn)
+        self.sql_server.close()
 
         return sime_data
 
 
-class SqlRURIDT:
+class SqlRURIDT(ISelectData):
 
     def __init__(self, bill_day)->None:
+        super().__init__()
         self.bill_day = bill_day
       
     def fetch_sqldata(self)->pd.DataFrame:
         warnings.filterwarnings("ignore", category=UserWarning)
-        sql_server:SqlServer = SqlServer()
-        cnxn = sql_server.get_cnxn()
+        cnxn = self.sql_server.get_cnxn()
 
         sql_query:str = ("SELECT RURIDT.RurUNo, RURIDT.RurTokCD,"
                         " RURIDT.RurSeiCD, RURIDT.RurHinCD, RURIDT.RurUriDay,"
@@ -52,16 +82,18 @@ class SqlRURIDT:
                         " ORDER BY RURIDT.RurSeiCD, RURIDT.RurUriDay, RURIDT.RurUNo"
                        )
         sales_data:pd.DataFrame = pd.read_sql(sql_query, cnxn)
+        self.sql_server.close()
 
         return sales_data
 
 
-class SqlRNYUKN:
+class SqlRNYUKN(ISelectData):
     '''
     入金のデータは締め日１ヵ月前～締め日までの範囲を取得する
     '''
 
     def __init__(self, SIME_DAY)->None:
+        super().__init__()
         self.SIME_DAY = SIME_DAY
 
 
@@ -104,8 +136,7 @@ class SqlRNYUKN:
         warnings.filterwarnings("ignore", category=UserWarning)
         stt_day:str = calc_stt_day(self.SIME_DAY)
 
-        sql_server:SqlServer = SqlServer()
-        cnxn = sql_server.get_cnxn()
+        cnxn = self.sql_server.get_cnxn()
 
         print(stt_day, "~", self.SIME_DAY)
 
@@ -118,17 +149,16 @@ class SqlRNYUKN:
                         " ORDER BY RnySeiCD, RnyNyuDay"
                         )
         deposit_data:pd.DataFrame = pd.read_sql(sql_query, cnxn)
+        self.sql_server.close()
 
         return deposit_data
 
 
-class SqlMTOKUI:
-
+class SqlMTOKUI(ISelectData):
       
     def fetch_sqldata(self)->pd.DataFrame:
         warnings.filterwarnings("ignore", category=UserWarning)
-        sql_server:SqlServer = SqlServer()
-        cnxn = sql_server.get_cnxn()
+        cnxn = self.sql_server.get_cnxn()
 
         sql_query:str = ("SELECT MTOKUI.TokTokCD, MTOKUI.TokNonyuCD,"
                         " MTOKUI.TokSeikyuCD,"
@@ -144,5 +174,23 @@ class SqlMTOKUI:
                         " ORDER BY MTOKUI.TokTokCD"
                         )
         tokui_data:pd.DataFrame = pd.read_sql(sql_query, cnxn)
+        self.sql_server.close()
 
         return tokui_data
+
+
+class SqlMTANIM(ISelectData):
+    '''
+    単位ﾏｽﾀ
+    '''
+    def fetch_sqldata(self)->pd.DataFrame:
+        warnings.filterwarnings("ignore", category=UserWarning)
+        cnxn = self.sql_server.get_cnxn()
+
+        sql_query:str = ("SELECT TniTniCD, TniTniNam"
+                        " From dbo.MTANIM"
+                        )
+        tani_data:pd.DataFrame = pd.read_sql(sql_query, cnxn)
+        self.sql_server.close()
+
+        return tani_data
