@@ -196,11 +196,15 @@ class Excel:
 
 
 
-    def save_file(self, is_post, customer_code)->None:
+    def save_file(self, is_post: bool, is_yuusou: bool, customer_code)->None:
 
         post_is_do_not_is:str = 'n'
         if is_post:
             post_is_do_not_is = 'y'
+
+        yuusou: str = ''
+        if is_yuusou:
+            yuusou = '郵送_'  # _を付けておく
 
         new_folder = f'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/02Excel/{self.__closing_date}'
         if self.__pf == 'Linux':
@@ -216,7 +220,7 @@ class Excel:
             file.Worksheets("1").Select()
             pdf_folder = f'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/03Pdf/{self.__closing_date}/01未提出'
             os.makedirs(name= pdf_folder, exist_ok= True)
-            file.ActiveSheet.ExportAsFixedFormat(0, f'{pdf_folder}/{self.__closing_date}_{customer_code}_{post_is_do_not_is}_.pdf')
+            file.ActiveSheet.ExportAsFixedFormat(0, f'{pdf_folder}/{self.__closing_date}_{customer_code}_{post_is_do_not_is}_{yuusou}.pdf')
             submitted_folder = f'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/03Pdf/{self.__closing_date}/02提出済'
             os.makedirs(name= submitted_folder, exist_ok= True)
         except Exception as e:

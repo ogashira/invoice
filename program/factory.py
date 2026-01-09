@@ -51,7 +51,7 @@ class Factory:
                 email_path = \
                 r'/mnt/public/営業課ﾌｫﾙﾀﾞ/02請求書/01Master/test_email_address.xlsx'
 
-        self.__email_info = pd.read_excel(email_path, sheet_name='mail')
+        self.__email_info:pd.DataFrame = pd.read_excel(email_path, sheet_name='mail')
         
 
     def create_sales_deposits(self, customers:list, tani_code)-> list:

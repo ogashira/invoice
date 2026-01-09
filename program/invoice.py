@@ -31,7 +31,24 @@ class Invoice:
         self.__TAX_RATE:str = TAX_RATE
         self.__email_info: pd.DataFrame = email_info
         self.__is_post = self.judge_should_post() # 請求書を提出するかどうか？
+        self.__is_yuusou = self.judge_is_yuusou() # 郵送かどうか？
 
+
+
+
+    def judge_is_yuusou(self)->bool:
+        '''
+        郵送かどうか？ 
+        '''
+        df_tmp = \
+        self.__email_info[self.__email_info['得意先CD']==self.__customer_code]
+        mail_or_yuusou: str = ''
+        if not df_tmp.empty:
+            mail_or_yuusou: str = df_tmp['Email'].iloc[0]
+        if mail_or_yuusou == '郵送':
+            return True
+
+        return False
 
     def judge_should_post(self)->bool:
         is_exist_free_samples: bool = \
@@ -93,4 +110,5 @@ class Invoice:
                                                 )
         
         self.__excel.arrange_sheets(self.__invoices_page_count)
-        self.__excel.save_file(self.__is_post, self.__customer_code)
+        self.__excel.save_file(self.__is_post, self.__is_yuusou, 
+                               self.__customer_code)

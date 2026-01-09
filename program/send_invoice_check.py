@@ -35,8 +35,13 @@ class SendInvoiceCheck:
 
         for invoice in self.__unsubmitted_invoices:
             try:
-                y_or_n: str = invoice.split('_')[2]
-                if invoice not in self.__submitted_invoices and y_or_n == 'y':
+                y_or_n: str = invoice.split('_')[2] # "y" or "n"
+                yuusou: str = invoice.split('_')[3] # "郵送"
+                if yuusou == "郵送":
+                    continue
+                if invoice in self.__submitted_invoices:
+                    continue
+                if y_or_n == 'y':
                     submission_invoices.append(invoice)
             except IndexError:
                 pass
