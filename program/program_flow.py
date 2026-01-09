@@ -7,6 +7,7 @@ from sql_query import SqlRNYUKN
 from sql_query import SqlBTSZAN
 from sql_query import SqlMTOKUI
 from sql_query import SqlMTANIM
+from sql_query import SqlMTORIK
 from factory import Factory
 
 class ProgramFlow:
@@ -33,6 +34,12 @@ class ProgramFlow:
         self.tani_code:Dict = dict(zip(df_tani['TniTniCD'],
                                                 df_tani['TniTniNam']))
 
+        sql_mtorik:ISelectData = SqlMTORIK()
+        df_nyuukin_kubun:pd.DataFrame = sql_mtorik.fetch_sqldata()
+        # dfを辞書に変換
+        self.nyuukin_kubun:Dict = dict(zip(df_nyuukin_kubun['TrkTrkKBN'],
+                                             df_nyuukin_kubun['TrkNam']))
+
 
         if not len(self.__df_sime):
             print(f'締め日({SIME_DAY})のデータがありません')
@@ -50,7 +57,8 @@ class ProgramFlow:
 
         sales_deposits:list = []
         sales_deposits = \
-        factory.create_sales_deposits(self.__customers, self.tani_code)
+        factory.create_sales_deposits(self.__customers, 
+                                      self.tani_code, self.nyuukin_kubun)
         # SalesDepositsの配列
 
         customers:list = []

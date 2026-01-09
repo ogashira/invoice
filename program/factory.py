@@ -2,7 +2,7 @@ import platform
 import pandas as pd
 import yaml
 import sys
-from typing import List
+from typing import List, Dict
 
 from deposit import Deposit
 from sale import Sale
@@ -35,7 +35,6 @@ class Factory:
         with open(path, 'r', encoding='utf-8') as yaml_file:
             yaml_data = yaml.safe_load(yaml_file)
         self.__instance_index_row = yaml_data['instanceIndex_saleExcelRow']
-        self.__nyukin_kubun = yaml_data['nyukin_kubun']
 
         email_path: str = \
         r'//192.168.1.247/共有/営業課ﾌｫﾙﾀﾞ/02請求書/01Master/email_address.xlsx'
@@ -54,7 +53,8 @@ class Factory:
         self.__email_info:pd.DataFrame = pd.read_excel(email_path, sheet_name='mail')
         
 
-    def create_sales_deposits(self, customers:list, tani_code)-> list:
+    def create_sales_deposits(self, customers:list, 
+                              tani_code: Dict, nyuukin_kubun: Dict)-> list:
         '''
         SalesDepositsクラスのインスタンスを作る
         SaleクラスのインスタンスとDepositクラスのインスタンスを
@@ -110,7 +110,7 @@ class Factory:
                     deposit_price:int = (df_of_customer_deposit.iloc[i,:]
                                                           ['RnyNyuKin'])
                     deposit:Deposit = Deposit(deposit_no, deposit_date, 
-                            deposit_kubun, deposit_price, self.__nyukin_kubun)
+                            deposit_kubun, deposit_price, nyuukin_kubun)
                     deposits.append(deposit)
                     sales_deposits_date_set.add(deposit_date)
 

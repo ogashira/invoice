@@ -41,7 +41,6 @@ class SqlBTSZAN(ISelectData):
         self.SIME_DAY = SIME_DAY
       
     def fetch_sqldata(self)->pd.DataFrame:
-        warnings.filterwarnings("ignore", category=UserWarning)
         cnxn = self.sql_server.get_cnxn()
 
         sql_query:str = ("SELECT TszTokCD, TszSimeDay, TszSeiZanZ, TszUriKinT," 
@@ -66,7 +65,6 @@ class SqlRURIDT(ISelectData):
         self.bill_day = bill_day
       
     def fetch_sqldata(self)->pd.DataFrame:
-        warnings.filterwarnings("ignore", category=UserWarning)
         cnxn = self.sql_server.get_cnxn()
 
         sql_query:str = ("SELECT RURIDT.RurUNo, RURIDT.RurTokCD,"
@@ -133,7 +131,6 @@ class SqlRNYUKN(ISelectData):
             return stt_day
 
 
-        warnings.filterwarnings("ignore", category=UserWarning)
         stt_day:str = calc_stt_day(self.SIME_DAY)
 
         cnxn = self.sql_server.get_cnxn()
@@ -157,7 +154,6 @@ class SqlRNYUKN(ISelectData):
 class SqlMTOKUI(ISelectData):
       
     def fetch_sqldata(self)->pd.DataFrame:
-        warnings.filterwarnings("ignore", category=UserWarning)
         cnxn = self.sql_server.get_cnxn()
 
         sql_query:str = ("SELECT MTOKUI.TokTokCD, MTOKUI.TokNonyuCD,"
@@ -184,11 +180,27 @@ class SqlMTANIM(ISelectData):
     単位ﾏｽﾀ
     '''
     def fetch_sqldata(self)->pd.DataFrame:
-        warnings.filterwarnings("ignore", category=UserWarning)
         cnxn = self.sql_server.get_cnxn()
 
         sql_query:str = ("SELECT TniTniCD, TniTniNam"
                         " From dbo.MTANIM"
+                        )
+        tani_data:pd.DataFrame = pd.read_sql(sql_query, cnxn)
+        self.sql_server.close()
+
+        return tani_data
+
+
+class SqlMTORIK(ISelectData):
+    '''
+    取引区分のマスタ 入金, 手形, でんさなど
+    '''
+    def fetch_sqldata(self)->pd.DataFrame:
+        cnxn = self.sql_server.get_cnxn()
+
+        sql_query:str = ("SELECT TrkTrkKBN, TrkNam"
+                         " From dbo.MTORIK"
+                         " WHERE TrkKBN = '5'"
                         )
         tani_data:pd.DataFrame = pd.read_sql(sql_query, cnxn)
         self.sql_server.close()
