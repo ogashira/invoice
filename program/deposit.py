@@ -6,7 +6,7 @@ class Deposit:
         # nyukin_kubun_from_yamlはyamlから入手したdictionary
         self.__deposit_no:str = deposit_no
         self.__deposit_date:str = deposit_date
-        self.__deposit_kubun:str = nyukin_kubun_from_yaml[deposit_kubun]
+        self.__deposit_kubun:str = nyukin_kubun_from_yaml[deposit_kubun][:3]
         self.__deposit_price:int = deposit_price
 
 
