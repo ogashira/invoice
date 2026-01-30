@@ -51,8 +51,7 @@ class MailAddTestSendMail(object):
         from_address = self.__yaml_data['eigyou']['from_address']
         to_address = mailAddress
 
-        if title.startswith('~年'):
-            title = f'【重要】請求書電子化に伴うメールアドレス確認のお願い（東洋工業塗料株式会社)'
+        title = f'【重要】請求書電子化に伴うメールアドレス確認のお願い（東洋工業塗料株式会社)'
         
 
         body = MIMEText(
