@@ -68,11 +68,11 @@ class Excel:
             self.ws.cell(row=i*70+8,column=1).value = customer_nam2 #type:ignore
             self.ws.cell(row=i*70+9,column=1).value = customer_nam3 #type:ignore
             if customer_nam2 == ' ' and customer_nam3 == ' ':
-                self.ws.cell(row=i*70+7,column=19).value = '御中' #type:ignore
+                self.ws.cell(row=i*70+7,column=18).value = '御中' #type:ignore
             if customer_nam2 != ' ' and customer_nam3 == ' ':
-                self.ws.cell(row=i*70+8,column=19).value = '御中' #type:ignore
+                self.ws.cell(row=i*70+8,column=18).value = '御中' #type:ignore
             if customer_nam3 != ' ':
-                self.ws.cell(row=i*70+9,column=19).value = '御中' #type:ignore
+                self.ws.cell(row=i*70+9,column=18).value = '御中' #type:ignore
 
     def filling_page_sales(self,row_no, count_page_sum_row, 
                            sales_deposits_count,
@@ -187,9 +187,9 @@ class Excel:
         self.ws.print_area = print_area 
 
         self.ws.page_margins.top = 0.7 * CM
-        self.ws.page_margins.right = 1.0 * CM
+        self.ws.page_margins.right = 0.5 * CM
         self.ws.page_margins.bottom = 0.2 * CM
-        self.ws.page_margins.left = 1.0 * CM
+        self.ws.page_margins.left = 2.0 * CM
         self.ws.page_margins.header = 0
         self.ws.page_margins.footer = 0
         
