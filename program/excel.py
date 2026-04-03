@@ -55,18 +55,18 @@ class Excel:
 
         for i in range(page_count):
             self.ws.cell(row=i*70+1, column=40).value = page_count
-            self.ws.cell(row=i*70+6, column=2).value = customer_code #type:ignore
+            self.ws.cell(row=i*70+6, column=1).value = customer_code #type:ignore
             self.ws.cell(row=i*70+2, column=26).value = (self.__closing_date[:4]  + '年' + #type:ignore
                                          self.__closing_date[4:6] + '月' + 
                                          self.__closing_date[6:])
-            self.ws.cell(row=i*70+1,column=2).value = ('〒' + customer_pos1 + '-' + 
+            self.ws.cell(row=i*70+1,column=1).value = ('〒' + customer_pos1 + '-' + 
                                                                  customer_pos2)
-            self.ws.cell(row=i*70+2,column=2).value = customer_addr1
-            self.ws.cell(row=i*70+3,column=2).value = customer_addr2
-            self.ws.cell(row=i*70+4,column=2).value = customer_addr3
-            self.ws.cell(row=i*70+7,column=2).value = customer_nam1
-            self.ws.cell(row=i*70+8,column=2).value = customer_nam2 #type:ignore
-            self.ws.cell(row=i*70+9,column=2).value = customer_nam3 #type:ignore
+            self.ws.cell(row=i*70+2,column=1).value = customer_addr1
+            self.ws.cell(row=i*70+3,column=1).value = customer_addr2
+            self.ws.cell(row=i*70+4,column=1).value = customer_addr3
+            self.ws.cell(row=i*70+7,column=1).value = customer_nam1
+            self.ws.cell(row=i*70+8,column=1).value = customer_nam2 #type:ignore
+            self.ws.cell(row=i*70+9,column=1).value = customer_nam3 #type:ignore
             if customer_nam2 == ' ' and customer_nam3 == ' ':
                 self.ws.cell(row=i*70+7,column=19).value = '御中' #type:ignore
             if customer_nam2 != ' ' and customer_nam3 == ' ':

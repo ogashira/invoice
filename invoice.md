@@ -35,6 +35,19 @@ GitHub Publicリポジトリで公開</br>
 ##### 請求書送信プロセス
 - `Winボタン+R -> si 入力 -> Enter`または`invoice/program`デイレクトリ内にて`python send_invoice_main.py`で実行 -> `\\192.168.1.247\共有\営業課ﾌｫﾙﾀﾞ\02請求書\01Master\test_email_address.xlsx`のアドレスに送信される
 - **テストの場合**:  `Winボタン+R -> si test 入力 -> Enter`または`invoice/program`デイレクトリ内にて`python send_invoice_main.py test`で実行 -> `\\192.168.1.247\共有\営業課ﾌｫﾙﾀﾞ\02請求書\01Master\test_email_address.xlsx`のアドレスに送信される
+##### メールアドレス確認テスト
+- `Winボタン+R -> addresscheck 入力 -> Enter`または`invoice/program`デイレクトリ内にて`python mailAdd_test__main.py`で実行 -> `\\192.168.1.247\共有\営業課ﾌｫﾙﾀﾞ\02請求書\01Master_email_address.xlsx`のアドレスに「請求書の送付前のメルアドテストなので、空メールの返信ください」の旨の本文が送られる。
+- **テストの場合**:  `Winボタン+R -> addresscheck test 入力 -> Enter`または`invoice/program`デイレクトリ内にて`python mailAdd_test_main.py test`で実行 -> `\\192.168.1.247\共有\営業課ﾌｫﾙﾀﾞ\02請求書\01Master\test_email_address.xlsx`のアドレスに「請求書の送付前のメルアドテストなので、空メールの返信ください」の旨の本文が送信される
+- メールアドレス確認テストコード
+
+| 確認メール送信プロセス    | クラス名            |
+| :---                      | :---                |
+| mailAdd_test_main.py      | 起点                |
+| mailAdd_test_flow.py      | MailAddTestFlow     |
+| mailAdd_test_check.py     | MailAddTestCheck    |
+| send_invoice_mail_info.py | MailInfo            |
+| mailAdd_test_send_mail.py | MailAddTestSendMail |
+| mailAdd_test_customer.py  | MailAddtestCustomer |
 
 ### 動作
 ```
@@ -58,15 +71,15 @@ GitHub Publicリポジトリで公開</br>
     |     |     |─ 20251025
     |     |     |─ 20251031
     |     |            |─01未提出
-    |     |            |     |─ 20251031_T0020_y_.pdf  # 送信が成功すると02提出済フォルダに移動する
+    |     |            |     |─ 20251031_T0020_y_.pdf      # 送信が成功すると02提出済フォルダに移動する
     |     |            |     |─ 20251031_T0060_y_.pdf  
-    |     |            |     |─ 20251031_T0100_y_.pdf
-    |     |            |     |─ 20251031_T2230_n_.pdf  # "_n_" が付くファイルは送信されない
+    |     |            |     |─ 20251031_T0100_y_郵送_.pdf # "-郵送_"が付くファイルは送信されない 
+    |     |            |     |─ 20251031_T2230_n_.pdf      # "_n_" が付くファイルは送信されない
     |     |            |
     |     |            |─02提出済
     |     |            |     |─ 20251031_T0020_y_.pdf
     |     |            |     |─ 20251031_T0060_y_.pdf
-    |     |            |     |─ 20251031_T0100_y_.pdf
+    |     |            |     
 ```
 ##### 請求書作成プロセス
 1. 請求書作成プロセススタート(i.bat)でpythonが締め日を訊いてくる
